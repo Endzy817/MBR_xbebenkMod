@@ -19,7 +19,7 @@ Global $g_hChkSmartLightSpell = 0, $g_hChkSmartEQSpell = 0, $g_hChkNoobZap = 0, 
 	   $g_hTxtSmartZapMinDE = 0, $g_hTxtSmartExpectedDE = 0, $g_hChkDebugSmartZap = 0, $g_hChkSmartZapFTW = 0, $g_hEarlyZap = 0
 
 Global $g_hLblSmartUseLSpell = 0, $g_hLblSmartUseEQSpell = 0,  $g_hLblSmartZap = 0, $g_hLblNoobZap = 0, $g_hLblSmartLightningUsed = 0, $g_hLblSmartEarthQuakeUsed = 0
-
+Global $g_hInpSmartZapTimes = 0 ; EndzyMod - SmartZap mod
 Func CreateAttackNewSmartZap()
 
 	Local $x = 25, $y = 45
