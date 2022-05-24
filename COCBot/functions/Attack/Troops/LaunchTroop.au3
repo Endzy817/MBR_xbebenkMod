@@ -52,7 +52,8 @@ Func LaunchTroop2($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion)
 	Local $listListInfoDeployTroopPixel[0]
 	Local $pixelRandomDrop[2]
 	Local $pixelRandomDropcc[2]
-
+	Local $kind, $RandomEdge, $RandomXY
+	
 	If ($g_abAttackStdSmartAttack[$g_iMatchMode]) Then
 		For $i = 0 To UBound($listInfoDeploy) - 1
 			Local $iFoundTroopAt = -1, $iTroopAmount = 0, $sTroopName
