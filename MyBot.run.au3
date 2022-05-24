@@ -1583,7 +1583,7 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
-	If Not $g_bRunState Then Return=
+	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then ; forced switch after first attack if cg point is almost max
 		SetLog("ClanGames point almost max/maxed, Forced switch account!", $COLOR_SUCCESS)
 		TrainSystem()
