@@ -142,16 +142,16 @@ Func CheckSwitchAcc()
 		EndIf
 	EndIf
 
-	Local $sLogSkip = ""
-	If Not $g_abDonateOnly[$g_iCurAccount] And $iWaitTime <= $g_iTrainTimeToSkip And Not $bForceSwitch Then
-		If Not $g_bRunState Then Return
-		If $iWaitTime > 0 Then $sLogSkip = " in " & Round($iWaitTime, 1) & " mins"
-		SetLog("Army is ready" & $sLogSkip & ", skip switching account", $COLOR_INFO)
-		SetSwitchAccLog(" - Army is ready" & $sLogSkip)
-		SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
-		If _Sleep(500) Then Return
+	;Local $sLogSkip = ""
+	;If Not $g_abDonateOnly[$g_iCurAccount] And $iWaitTime <= $g_iTrainTimeToSkip And Not $bForceSwitch Then
+	;	If Not $g_bRunState Then Return
+	;	If $iWaitTime > 0 Then $sLogSkip = " in " & Round($iWaitTime, 1) & " mins"
+	;	SetLog("Army is ready" & $sLogSkip & ", skip switching account", $COLOR_INFO)
+	;	SetSwitchAccLog(" - Army is ready" & $sLogSkip)
+	;	SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
+	;	If _Sleep(500) Then Return
 
-	Else
+	;Else
 
 		If $g_bChkSmartSwitch = True Then ; Smart switch
 			SetDebugLog("-Smart Switch-")
@@ -213,20 +213,7 @@ Func CheckSwitchAcc()
 				If $g_bRequestTroopsEnable Then
 					If _Sleep(1000) Then Return
 					SetLog("Try RequestCC before switching account", $COLOR_DEBUG)
-					RequestCC()
-				EndIf
-				If $g_bForceSwitchifNoCGEvent Then
-					PrepareDonateCC()
-					DonateCC()
-					TrainSystem()
-				EndIf
-			Else
-				If $g_bRequestTroopsEnable Then
-					SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
-					RequestCC(False)
-					PrepareDonateCC()
-					DonateCC()
-					TrainSystem()
+					_RunFunction('FstReq')
 				EndIf
 			EndIf
 			If Not $g_bForceSwitchifNoCGEvent Then _ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
@@ -236,7 +223,7 @@ Func CheckSwitchAcc()
 			SetLog("Staying in this account")
 			SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
 		EndIf
-	EndIf
+	;EndIf
 	If Not $g_bRunState Then Return
 
 	$g_bForceSwitch = false ; reset the need to switch

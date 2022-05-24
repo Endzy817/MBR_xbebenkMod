@@ -2,7 +2,7 @@
 ; Name ..........: DailyChallenges()
 ; Description ...: Daily Challenges
 ; Author ........: TripleM (04/2019), Demen (07/2019)
-; Modified ......:
+; Modified ......: Endzy (03/04/2022) April 3
 ; Remarks .......: This file is part of MyBot Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -20,7 +20,7 @@ Func DailyChallenges()
 	Local Static $asLastTimeChecked[UBound($g_abAccountNo)]
 	If $g_bFirstStart Then $asLastTimeChecked[$g_iCurAccount] = ""
 	checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenges")
-	
+
 	Local $bGoldPass = _CheckPixel($aPersonalChallengeOpenButton2, $g_bCapturePixel) ; golden badge button at mainscreen
 	Local $bCheckDiscount = $bGoldPass And ($g_bUpgradeKingEnable Or $g_bUpgradeQueenEnable Or $g_bUpgradeWardenEnable Or $g_bUpgradeChampionEnable or $g_bAutoUpgradeWallsEnable)
 
@@ -66,6 +66,48 @@ Func OpenPersonalChallenges()
 	Return True
 EndFunc   ;==>OpenPersonalChallenges
 
+Func SearchHeroBook($bCheckOneTime = False)
+	If _Sleep($DELAYSPECIALCLICK1) Then Return False
+
+	Local $bReturn = False
+
+	$bReturn = _WaitForCheckImg($g_sImgHeroBook, "22,419,840,555", Default, ($bCheckOneTime = False) ? (500) : (0))
+
+	If $g_bDebugSetlog Then
+		SetDebugLog("SearchHeroBook: Is HeroBook? " & $bReturn, $COLOR_DEBUG)
+	EndIf
+
+	Return $bReturn
+EndFunc   ;==>SearchHeroBook
+
+Func SearchHeroPot($bCheckOneTime = False)
+	If _Sleep($DELAYSPECIALCLICK1) Then Return False
+
+	Local $bReturn = False
+
+	$bReturn = _WaitForCheckImg($g_sImgHeroPot, "22,419,840,555", Default, ($bCheckOneTime = False) ? (500) : (0))
+
+	If $g_bDebugSetlog Then
+		SetDebugLog("SearchHeroPot: Is HeroPotion? " & $bReturn, $COLOR_DEBUG)
+	EndIf
+
+	Return $bReturn
+EndFunc   ;==>SearchHeroPot
+#cs no image yet, comment for now
+Func SearchPowerPot($bCheckOneTime = False)
+	If _Sleep($DELAYSPECIALCLICK1) Then Return False
+
+	Local $bReturn = False
+
+	$bReturn = _WaitForCheckImg($g_sImgHeroBook, "22,419,840,555", Default, ($bCheckOneTime = False) ? (500) : (0))
+
+	If $g_bDebugSetlog Then
+		SetDebugLog("SearchHeroBook: Is HeroBook? " & $bReturn, $COLOR_DEBUG)
+	EndIf
+
+	Return $bReturn
+EndFunc   ;==>SearchPowerPot
+#ce
 Func CollectDailyRewards($bGoldPass = False)
 
 	If Not $g_bChkCollectRewards Or Not _CheckPixel($aPersonalChallengeRewardsAvail, $g_bCapturePixel) Then Return ; no red badge on rewards tab
@@ -88,15 +130,32 @@ Func CollectDailyRewards($bGoldPass = False)
 				If IsArray($aResultArray) And $aResultArray[0] = "ClaimBtn" Then
 					Local $sAllCoordsString = _ArrayToString($aResultArray, "|", 1) ; "x1,y1|x2,y2|..."
 					Local $aAllCoords = decodeMultipleCoords($sAllCoordsString, 50, 50) ; [{coords1}, {coords2}, ...]
-
+					;Local $bSkipChkHB = False
+					;Local $bSkipChkHP = False
 					For $j = 0 To UBound($aAllCoords) - 1
-						ClickP($aAllCoords[$j], 1, 0, "Claim " & $j + 1) ; Click Claim button
+						;_CaptureRegion2()
+						;$bSkipChkHB = False ;Reset
+						If Not SearchHeroBook() Then ;And Not $bSkipChkHB Then
+							ClickP($aAllCoords[$j], 1, 0, "Claim " & $j + 1) ; Click Claim button
+						Else
+							Setlog("Found Book of Heroes, skip claim.", $COLOR_SUCCESS)
+							;$bSkipChkHB = True
+							ContinueLoop
+						EndIf
+						;If Not SearchHeroPot() And Not $bSkipChkHP Then
+						;	ClickP($aAllCoords[$j], 1, 0, "Claim " & $j + 1) ; Click Claim button
+						;Else
+						;	Setlog("Found Hero Potion, skip claim.", $COLOR_SUCCESS)
+						;	$bSkipChkHP = True
+						;	ContinueLoop
+						;EndIf
 						If WaitforPixel(350, 380, 351, 381, Hex(0xFDC875, 6), 20, 3) Then; wait for Cancel Button popped up in 1.5 second
 						    If $g_bChkSellRewards Then
 							    Setlog("Selling extra reward for gems", $COLOR_SUCCESS)
 								ClickP($aPersonalChallengeOkBtn, 1, 0, "Okay Btn") ; Click the Okay
 								$iClaim += 1
 							Else
+								SetLog("Sell Extras not enabled.", $COLOR_INFO)
 								SetLog("Cancel. Not selling extra rewards.", $COLOR_SUCCESS)
 								ClickP($aPersonalChallengeCancelBtn, 1, 0, "Cancel Btn") ; Click Claim button
 							Endif
@@ -123,6 +182,8 @@ Func CollectDailyRewards($bGoldPass = False)
 		EndIf
 	Next
 	SetLog($iClaim > 0 ? "Claimed " & $iClaim & " reward(s)!" : "Nothing to claim!", $COLOR_SUCCESS)
+	;$bSkipChkHB = False ;Reset
+	;$bSkipChkHP = False ;Reset
 	If _Sleep(500) Then Return
 
 EndFunc   ;==>CollectDailyRewards

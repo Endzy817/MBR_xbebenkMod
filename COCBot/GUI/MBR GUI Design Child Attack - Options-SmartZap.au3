@@ -72,7 +72,13 @@ Func CreateAttackNewSmartZap()
 			GUICtrlSetOnEvent(-1, "chkSmartZapEarly")
 			GUICtrlSetState(-1, $GUI_UNCHECKED)
 			GUICtrlSetState(-1, $GUI_DISABLE)
-
+		#Region - SmartZap mod - Endzy
+			GUICtrlCreateLabel(GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "LblSmartZapTimes", "Zap per collector"), $x + 20 + 2, $y + 145, -1, -1)
+		$g_hInpSmartZapTimes = _GUICtrlCreateInput("3", $x + 120, $y + 140, 40, 21, BitOR($GUI_SS_DEFAULT_INPUT, $ES_CENTER, $ES_NUMBER))
+			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Options-SmartZap", "SmartZapTimes_Info_01", "How many times to zap per collector."))
+			GUICtrlSetLimit(-1, 1)
+			GUICtrlSetOnEvent(-1, "InpSmartZapTimes")
+		#EndRegion - SmartZap mod - Endzy
 	$y -= 55
 		_GUICtrlCreateIcon($g_sLibIconPath, $eIcnDark, $x + 200 + 9, $y + 11, 24, 24)
 		GUICtrlCreateGroup("", $x + 199, $y - 1, 192, 106)

@@ -663,7 +663,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 		$iStartDelay = $iDelay * 1000
 		$g_iBotAction = $eBotStart
 		; check if android should be hidden
-		If $g_bBotLaunchOption_HideAndroid Then $g_bIsHidden = True
+		If Not $g_bBotLaunchOption_HideAndroid Then $g_bIsHidden = True
 		; check if bot should be minimized
 		If $g_bBotLaunchOption_MinimizeBot Then BotMinimizeRequest()
 	EndIf
@@ -1127,18 +1127,18 @@ Func __RunFunction($action)
 	Switch $action
 		Case "Collect"
 			Collect()
-			_Sleep($DELAYRUNBOT1)
+			;_Sleep($DELAYRUNBOT1)
 		Case "CheckTombs"
 			CheckTombs()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "CleanYard"
 			CleanYard()
 		Case "ReplayShare"
 			ReplayShare($g_bShareAttackEnableNow)
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "NotifyReport"
 			NotifyReport()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "DonateCC"
 			If $g_iActiveDonate And $g_bChkDonate Then
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
@@ -1197,17 +1197,17 @@ Func __RunFunction($action)
 			_Sleep($DELAYRESPOND)
 		Case "BoostEverything"
 			BoostEverything()
-			_Sleep($DELAYRESPOND)
+			;_Sleep($DELAYRESPOND)
 		Case "DailyChallenge"
 			DailyChallenges()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 			checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenge")
 		 Case "RequestCC"
 			RequestCC()
 			ClickAway()
 		Case "Laboratory"
 			Laboratory()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 			checkMainScreen(False, $g_bStayOnBuilderBase, "Laboratory")
 		Case "PetHouse"
 			PetHouse()
@@ -1215,39 +1215,72 @@ Func __RunFunction($action)
 			ForgeClanCapitalGold()
 		Case "BoostSuperTroop"
 			BoostSuperTroop()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "UpgradeHeroes"
 			UpgradeHeroes()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "UpgradeBuilding"
 			UpgradeBuilding()
 			If _Sleep($DELAYRUNBOT3) Then Return
 			AutoUpgrade()
 			ZoomOut()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
 			ClickAway()
 			UpgradeWall()
 			ZoomOut()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
 				BuilderBase()
 			EndIf
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "CollectAchievements"
 			CollectAchievements()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "CollectFreeMagicItems"
 			CollectFreeMagicItems()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "SellHeroPot"
 			SellHeroPot()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
 		Case "AutoUpgradeCC"
 			AutoUpgradeCC()
-			_Sleep($DELAYRUNBOT3)
+			;_Sleep($DELAYRUNBOT3)
+		Case "CheckLeague"
+			CheckLeague()
+			;_Sleep($DELAYRUNBOT3)
+		Case "FstReq"
+			RequestCC(1,1,0,1) ; fast request CC
+			;_Sleep($DELAYRUNBOT3)
+		Case "EarlyUpgChk"
+			If $g_iFreeBuilderCount > 0 And (_ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1)) Then
+				If _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
+					Laboratory()
+					VillageReport(True, True)
+				EndIf
+				Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
+				If Not $g_bRunState Then Return
+				CheckTombs()
+				CleanYard()
+				_Sleep(8000) ;add wait after clean yard
+				If Not $g_bRunState Then Return
+				If $g_bUpgradeWallEarly Then
+					SetLog("Check Upgrade Wall Early", $COLOR_INFO)
+					_RunFunction('UpgradeWall') ;UpgradeWall()
+				EndIf
+			;	If Not $g_bRunState Then Return
+			;	If $g_bAutoUpgradeEarly Then
+			;		SetLog("Check Auto Upgrade Early", $COLOR_INFO)
+			;		checkArmyCamp(True, True) ;need to check reserved builder for heroes
+			;		AutoUpgrade()
+			;	EndIf
+			;	VillageReport()
+			;	ZoomOut()
+				UpgradeHeroes() ;Early Hero Upgrade
+			EndIf
+			;UpgradeHeroes() ;Early Hero Upgrade
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1300,7 +1333,7 @@ Func FirstCheck()
 		saveConfig()
 	EndIf
 	
-	If $g_iTownHallLevel > 5 Then
+#cs	If $g_iTownHallLevel > 5 Then
 		If $g_bchkSyncTHWall Then
 			For $z = 0 To 2
 				$g_aUpgradeWall[$z] = $g_iTownHallLevel - 2 + $z - 4
@@ -1346,7 +1379,7 @@ Func FirstCheck()
 			EndIf
 		EndIf
 		saveConfig()
-	EndIf
+#ce	EndIf
 
 	If Not $g_bRunState Then Return
 	VillageReport()
@@ -1363,31 +1396,9 @@ Func FirstCheck()
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
 	
-	If isElixirFull() Then 
-		Laboratory()
-		VillageReport(True, True)
-	EndIf
+
 	
-	If $g_iFreeBuilderCount > 0 Then 
-		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
-		If Not $g_bRunState Then Return
-		CheckTombs()
-		CleanYard()
-		_Sleep(8000) ;add wait after clean yard
-		If Not $g_bRunState Then Return
-		If $g_bUpgradeWallEarly Then
-			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
-			UpgradeWall()
-		EndIf
-		If Not $g_bRunState Then Return
-		If $g_bAutoUpgradeEarly Then
-			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
-			checkArmyCamp(True, True) ;need to check reserved builder for heroes
-			AutoUpgrade()
-		EndIf
-		VillageReport()
-		ZoomOut()
-	EndIf
+	_RunFunction('EarlyUpgChk')
 
 	If BotCommand() Then btnStop()
 	
@@ -1398,6 +1409,7 @@ Func FirstCheck()
 		checkSwitchAcc()
 	Else
 		FirstCheckRoutine()
+		checkSwitchAcc()
 	EndIf
 EndFunc   ;==>FirstCheck
 
@@ -1503,27 +1515,23 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
-	
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then ; forced switch after first attack if cg point is almost max
-		SetLog("ClanGames point almost max/maxed, Forced switch account!", $COLOR_SUCCESS)
-		TrainSystem()
-		CommonRoutine("NoClanGamesEvent")
-		$g_bForceSwitchifNoCGEvent = True
-		checkSwitchAcc() ;switch to next account
-	EndIf
-	
+
+	TrainSystem()
+	_RunFunction('DonateCC,Train')
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then 
-		PrepareDonateCC()
-		DonateCC()
-		TrainSystem()
-		checkSwitchAcc() ;switch to next account
-	EndIf
+	Local $aRndFuncList = ['Collect', 'FstReq', 'UpgradeHeroes', 'BuilderBase', 'CheckTombs', 'CleanYard', 'Laboratory', 'PetHouse']
+	_ArrayShuffle($aRndFuncList)
+	For $Index In $aRndFuncList
+		If Not $g_bRunState Then Return
+		_RunFunction($Index)
+		If _Sleep(100) Then Return
+		If $g_bRestart Then Return
+	Next
 	
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
-		RequestCC() ;only do requestCC here
+		;RequestCC() ;only do requestCC here
 		If _Sleep($DELAYRUNBOT2) Then Return
 		VillageReport()
 		If _Sleep($DELAYRUNBOT2) Then Return
@@ -1575,18 +1583,21 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
+	If Not $g_bRunState Then Return=
+	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then ; forced switch after first attack if cg point is almost max
+		SetLog("ClanGames point almost max/maxed, Forced switch account!", $COLOR_SUCCESS)
+		TrainSystem()
+		CommonRoutine("NoClanGamesEvent")
+		$g_bForceSwitchifNoCGEvent = True
+		checkSwitchAcc() ;switch to next account
+	EndIf
+
+	TrainSystem()
+	_RunFunction('DonateCC,Train')
 	
 	If Not $g_bRunState Then Return
-	RequestCC(False)
-	checkArmyCamp(False, True)
-	PrepareDonateCC()
-	_Sleep(1000)
-	DonateCC()
-	If $b_SuccessAttack Then TrainSystem()
-	If Not $g_bRunState Then Return
-	CommonRoutine("FirstCheckRoutine")
+	;CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then 
-		CommonRoutine("Switch")
 		checkSwitchAcc() ;switch to next account
 	EndIf
 EndFunc
@@ -1595,23 +1606,27 @@ Func CommonRoutine($RoutineType = Default)
 	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
 	Switch $RoutineType
 		Case "FirstCheckRoutine"
-			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(500) Then Return
-				If $g_bRestart Then Return
-			Next
-			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'ForgeClanCapitalGold', 'AutoUpgradeCC']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(500) Then Return
-				If $g_bRestart Then Return
-			Next
+			;Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements', 'CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot', 'PetHouse']
+			;_ArrayShuffle($aRndFuncList)
+			;For $Index In $aRndFuncList
+			;	If Not $g_bRunState Then Return
+			;	_RunFunction($Index)
+			;	If _Sleep(100) Then Return
+			;	If $g_bRestart Then Return
+			;Next
+
+			If _ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
+				Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'Laboratory'] ;, 'PetHouse']
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If _Sleep(100) Then Return
+					If $g_bRestart Then Return
+				Next
+			EndIf
 			
 		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase']
+			Local $aRndFuncList = ['Collect', 'Laboratory'] ;, 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

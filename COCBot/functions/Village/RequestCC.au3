@@ -5,7 +5,7 @@
 ; Parameters ....:
 ; Return values .: None
 ; Author ........:
-; Modified ......: Sardo(06-2015), KnowJack(10-2015), Sardo (08-2015)
+; Modified ......: Sardo(06-2015), KnowJack(10-2015), Sardo (08-2015), Endzy (04/25/2022)
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
+Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False, $bNRtTxt = False)
 
 	If Not $g_bRequestTroopsEnable Or Not $g_bDonationEnabled Then
 		Return
@@ -28,9 +28,9 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 			Return ; exit func if no planned donate checkmarks
 		EndIf
 	EndIf
-	
+
 	;open army overview
-	If $sText = "IsFullClanCastle" Then 
+	If $sText = "IsFullClanCastle" Then
 		If Not isTrainPage() Then Return
 	Else
 		If Not OpenArmyOverview(True, "RequestCC()") Then Return
@@ -50,7 +50,7 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 	EndIf
 
 	If Not $g_bRunState Then Return
-	
+
 	Switch $aRequestButton[0][0]
 		Case "AlreadyMade"
 			SetLog("Clan Castle Request has already been made", $COLOR_INFO)
@@ -70,12 +70,12 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 				Next
 			EndIf
 			If $bNeedRequest Then
-				_makerequest($aRequestButton[0][1], $aRequestButton[0][2], $bTest)
+				_makerequest($aRequestButton[0][1], $aRequestButton[0][2], $bTest, $bNRtTxt)
 			EndIf
 		Case "FullOrUnavail"
 			SetLog("Clan Castle is full or not available", $COLOR_INFO)
 	EndSwitch
-	
+
 
 	;exit from army overview
 	If _Sleep($DELAYREQUESTCC1) Then Return
@@ -83,55 +83,64 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False)
 
 EndFunc   ;==>RequestCC
 
-Func _makerequest($x, $y, $bTest)
-	
-	Click($x, $y, 1, 0, "0336") ;click button request troops	
+Func _makerequest($x, $y, $bTest, $bNRtTxt)
+
+	Click($x, $y, 1, 0, "0336") ;click button request troops
 	Local $RequestWindowOpen = False
 	For $i = 1 To 10
 		SetDebugLog("Wait for Send Request Window #" & $i, $COLOR_ACTION)
-		If QuickMis("BC1", $g_sImgSendRequestButton, 440, 410, 600, 550) Then 
+		If QuickMis("BC1", $g_sImgSendRequestButton, 440, 410, 600, 550) Then
 			SetDebugLog("_makerequest: Request window open", $COLOR_ACTION)
 			$RequestWindowOpen = True
 			ExitLoop
 		EndIf
 		_Sleep(250)
 	Next
-	
-	If $RequestWindowOpen Then 
-		If $g_sRequestTroopsText <> "" Then
-			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-			Click($g_iQuickMISX - 50, $g_iQuickMISY - 60) ;click text box 
-			If _Sleep(1000) Then Return
-			If SendText($g_sRequestTroopsText) = 0 Then ;type the request
-				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
-				ClickAway()
-			EndIf
-		EndIf
-		If _Sleep(2000) Then Return ; wait time for text request to complete
-		Click($g_iQuickMISX + 95, $g_iQuickMISY)
-		If _Sleep(1000) Then Return ; wait time after clicking request window border
-		For $i = 1 To 5
-			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
-			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
-				SetDebugLog("Make final request", $COLOR_ACTION)
-				If Not $bTest Then 
-					Click($g_iQuickMISX, $g_iQuickMISY)
-				Else
-					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
-				EndIf
-			Else
-				SetDebugLog("Send Button Is gone!!!", $COLOR_SUCCESS)
-				ExitLoop
-			EndIf
-			_Sleep(1000)
-		Next
+
+	If $RequestWindowOpen And $bNRtTxt = 1 Then ; Not type req text
+		; Click Req Button no need image search and waste time, just click lol
+		Click(Random(460,580,1),Random(440,480,1)) ; Click(520,460)
 		$g_bCanRequestCC = False
 	Else
-		SetDebugLog("Send request button not found", $COLOR_DEBUG)
+		If $RequestWindowOpen Then
+			If $g_sRequestTroopsText <> "" Then
+				If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
+				Click($g_iQuickMISX - 50, $g_iQuickMISY - 60) ;click text box
+				If _Sleep(1000) Then Return
+				If SendText($g_sRequestTroopsText) = 0 Then ;type the request
+					SetLog(" Request text entry failed, try again", $COLOR_ERROR)
+					ClickAway()
+				EndIf
+			EndIf
+			If _Sleep(2000) Then Return ; wait time for text request to complete
+			Click($g_iQuickMISX + 95, $g_iQuickMISY)
+			If _Sleep(1000) Then Return ; wait time after clicking request window border
+			; Click Req Button no need image search and waste time, just click lol
+			Click(Random(460,580,1),Random(440,480,1)) ; Click(520,460)
+			$g_bCanRequestCC = False
+	#cs		For $i = 1 To 5
+				SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
+				If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
+					SetDebugLog("Make final request", $COLOR_ACTION)
+					If Not $bTest Then
+						Click($g_iQuickMISX, $g_iQuickMISY)
+					Else
+						SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+					EndIf
+				Else
+					SetDebugLog("Send Button Is gone!!!", $COLOR_SUCCESS)
+					ExitLoop
+				EndIf
+				_Sleep(1000)
+			Next
+			$g_bCanRequestCC = False
+		Else
+	#ce		SetDebugLog("Send request button not found", $COLOR_DEBUG)
+		EndIf
 	EndIf
 	If _Sleep(1000) Then Return
 
-	If _Sleep($DELAYMAKEREQUEST2) Then Return
+	;If _Sleep($DELAYMAKEREQUEST2) Then Return
 EndFunc   ;==>_makerequest
 
 Func IsFullClanCastleType($CCType = 0) ; Troops = 0, Spells = 1, Siege Machine = 2

@@ -290,6 +290,10 @@
 #include "functions\Other\ApiClient.au3"
 #include "functions\Other\ForumAuthentication.au3"
 
+; Endzy Mod
+#include "functions\Village\EndzyMod.au3"
+#include "functions\Pixels\PixelMods.au3"
+
 ; moved to the end to avoid any global declare issues
 #include "functions\Config\profileFunctions.au3"
 #include "functions\Config\_Ini_Table.au3"

@@ -18,7 +18,7 @@ Func UpgradeHeroes()
 	If _Sleep(500) Then Return
 
 	checkMainScreen(False)
-
+	ZoomOut()
 	If $g_bRestart Then Return
 
 	If $g_bUpgradeKingEnable Then
@@ -48,10 +48,10 @@ Func UpgradeHeroes()
 	SetLog("Upgrading Heroes", $COLOR_INFO)
 
 	;Check if Auto Lab Upgrade is enabled and if a Dark Troop/Spell is selected for Upgrade. If yes, it has priority!
-	If $g_bAutoLabUpgradeEnable And $g_iLaboratoryDElixirCost > 0 Then
-		SetLog("Laboratory needs DE to Upgrade:  " & $g_iLaboratoryDElixirCost)
-		SetLog("Skipping the Queen and King Upgrade!")
-	Else
+;	If $g_bAutoLabUpgradeEnable And $g_iLaboratoryDElixirCost > 0 Then
+;		SetLog("Laboratory needs DE to Upgrade:  " & $g_iLaboratoryDElixirCost)
+;		SetLog("Skipping the Queen and King Upgrade!")
+;	Else
 		; ### Archer Queen ###
 		If $g_bUpgradeQueenEnable And BitAND($g_iHeroUpgradingBit, $eHeroQueen) <> $eHeroQueen Then
 			If Not getBuilderCount() Then Return ; update builder data, return if problem
@@ -88,7 +88,7 @@ Func UpgradeHeroes()
 
 			If _Sleep($DELAYUPGRADEHERO1) Then Return
 		EndIf
-	EndIf
+;	EndIf
 
 	; ### Grand Warden ###
 	;Check if Auto Lab Upgrade is enabled and if a Elixir Troop/Spell is selected for Upgrade. If yes, it has priority!

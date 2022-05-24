@@ -1946,8 +1946,8 @@ Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
 		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
 		[0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
-
-
+Global $g_iInpSmartZapTimes = 1 ;EndzyMod - SmartZap
+Global $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSety = 0 ; Endzy
 ;Misc Mod
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = False 
 Global $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False
