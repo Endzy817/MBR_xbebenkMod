@@ -1954,12 +1954,12 @@ Global $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = Fa
 Global $g_bTrainPreviousArmy = False, $g_bAlwaysDropHero = True, $g_bSkipSnowDetection = False
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
 Global $g_bEnableCCSleep = False, $g_bSkipDT = False
-
+Global $g_hChkSmartFarmAndRandomQuant = True ; Endzy
 ;Builder Base
 Global $g_bDebugBBattack = False
 Global $g_bBBForceCustomArmy = False
 Global $g_iBBAttacked = False ; DoAttackBB attacked or not
-
+Global $g_bUseSmartFarmAndRandomQuant = True ; Endzy
 ;ClanCapital
 Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableAutoUpgradeCC = False, $g_bChkAutoUpgradeCCIgnore = False
 Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False

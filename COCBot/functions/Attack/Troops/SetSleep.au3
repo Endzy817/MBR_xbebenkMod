@@ -19,7 +19,7 @@ Func SetSleep($iType)
 		Case 0
 			Return Round(Random(0.95, 1.15) * (10 * $iOffset0)) ;troops
 		Case 1
-			Return Round(Random(0.95, 1.15) * (10 * $iOffset1)) ;wave
+			Return Round(Random(0.95, 1.15) * (1 * $iOffset1)) ;wave
 	EndSwitch
 EndFunc   ;==>SetSleep
 

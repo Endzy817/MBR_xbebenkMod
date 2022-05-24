@@ -90,3 +90,18 @@ EndFunc   ;==>txtMinDark
 Func txtExpectedDE()
 	$g_iSmartZapExpectedDE = GUICtrlRead($g_hTxtSmartExpectedDE)
 EndFunc   ;==>TxtExpectedDE
+
+#Region - SmartZap mod - Endzy
+Func InpSmartZapTimes()
+	$g_iInpSmartZapTimes = Int(GUICtrlRead($g_hInpSmartZapTimes))
+	If $g_iInpSmartZapTimes < 1 Then
+		SetLog("Smart Zap: Please input a number 1 to 5.", $COLOR_INFO)
+		GUICtrlSetData($g_hInpSmartZapTimes, 1)
+		$g_iInpSmartZapTimes = 1
+	ElseIf $g_iInpSmartZapTimes > 5 Then
+		SetLog("Smart Zap: Please input a number 1 to 5.", $COLOR_INFO)
+		GUICtrlSetData($g_hInpSmartZapTimes, 5)
+		$g_iInpSmartZapTimes = 5
+	EndIf
+EndFunc   ;==>InpSmartZapTimes
+#EndRegion - SmartZap mod - Endzy 

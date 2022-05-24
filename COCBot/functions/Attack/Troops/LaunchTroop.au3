@@ -61,6 +61,17 @@ Func LaunchTroop2($listInfoDeploy, $iCC, $iKing, $iQueen, $iWarden, $iChampion)
 			Local $iNumberWaves = $listInfoDeploy[$i][2]
 			Local $iMaxNumberWaves = $listInfoDeploy[$i][3]
 			Local $iSlotsPerEdge = $listInfoDeploy[$i][4]
+			$kind = $listInfoDeploy[$i][0]
+			If IsString($kind) And ($kind = "CC" Or $kind = "HEROES") And Random(0, 3, 1) = 2 Then
+				$RandomEdge = $g_aaiEdgeDropPoints[Round(Random(0, 3, 1))]
+				$RandomXY = Round(Random(0, 4, 1))
+
+				If $kind = "CC" Then
+					dropCC($RandomEdge[$RandomXY][0], $RandomEdge[$RandomXY][1], $g_iClanCastleSlot)
+				ElseIf $kind = "HEROES" Then
+					dropHeroes($RandomEdge[$RandomXY][0], $RandomEdge[$RandomXY][1], $g_iKingSlot, $g_iQueenSlot, $g_iWardenSlot, $g_iChampionSlot)
+				EndIf
+			EndIf
 			SetDebugLog("**ListInfoDeploy row " & $i & ": Use: " & $vTroopIndex & "|Sides: " & $iNumberSides & "|Wave: " & $iNumberWaves & "|Max Wavess: " & $iMaxNumberWaves & "|Slots per Edge " & $iSlotsPerEdge, $COLOR_DEBUG)
 			If IsNumber($vTroopIndex) Then
 				$iFoundTroopAt = _ArraySearch($g_avAttackTroops, $vTroopIndex, 0, 0, 0, 0, 1, 0)

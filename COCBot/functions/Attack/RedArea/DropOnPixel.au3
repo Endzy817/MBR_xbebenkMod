@@ -37,7 +37,10 @@ Func DropOnPixel($troop, $listArrPixel, $number, $slotsPerEdge = 0)
 		Local $nbTroopsLeft = $number
 		Local $offset = 1
 		Local $nbTroopByPixel = 1
+		Local $Clicked = 0
 		Local $arrPixel = $listArrPixel[$i]
+		Local $bLastSide
+		If $g_bUseSmartFarmAndRandomQuant And Not $bLastSide Then $nbTroopsLeft = UBound($arrPixel)
 		debugRedArea("UBound($arrPixel) " & UBound($arrPixel) & "$number :" & $number)
 		While ($nbTroopsLeft > 0)
 			If (UBound($arrPixel) = 0) Then

@@ -196,3 +196,14 @@ Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1,
 	GUICtrlSetBkColor($hReturn, 0xD1DFE7)
 	Return $hReturn
 EndFunc   ;==>_GUICtrlCreateInput
+#cs
+Func chkUseSmartFarmAndRandomQuant()
+	If $g_iGuiMode <> 1 Then Return
+	If GUICtrlRead($g_hChkSmartFarmAndRandomQuant) = $GUI_CHECKED And $g_abAttackTypeEnable[$DB] And $g_aiAttackAlgorithm[$DB] = 2 And Not $g_abAttackTypeEnable[$LB] Then
+		$g_bUseSmartFarmAndRandomQuant = True
+	Else
+		GUICtrlSetState($g_hChkSmartFarmAndRandomQuant, $GUI_UNCHECKED)
+		$g_bUseSmartFarmAndRandomQuant = False
+	EndIf
+EndFunc   ;==>chkUseSmartFarmAndRandomQuant
+#ce
