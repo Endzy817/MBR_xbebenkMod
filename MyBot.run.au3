@@ -1053,7 +1053,7 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 		;	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
 		;		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 		;		checkSwitchAcc()
-			EndIf
+		;	EndIf
 			If Not $g_bRunState Then Return
 			If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
