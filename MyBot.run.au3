@@ -1402,7 +1402,7 @@ Func FirstCheckRoutine()
 	TrainSystem()
 	_RunFunction('DonateCC,Train')
 	If Not $g_bRunState Then Return
-	Local $aRndFuncList = ['Collect', 'FstReq', 'UpgradeHeroes', 'BuilderBase', 'CheckTombs', 'CleanYard', 'Laboratory', 'PetHouse']
+	Local $aRndFuncList = ['Collect', 'FstReq', 'ReplayShare', 'UpgradeHeroes', 'ChkLeague','BuilderBase', 'CheckTombs', 'CleanYard', 'Laboratory', 'DailyChallenge', 'CollectAchievements', 'PetHouse', 'DailyChallenge', 'CollectAchievements']
 	_ArrayShuffle($aRndFuncList)
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
@@ -1461,13 +1461,6 @@ Func FirstCheckRoutine()
 		EndIf
 	EndIf
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then ; forced switch after first attack if cg point is almost max
-		SetLog("ClanGames point almost max/maxed, Forced switch account!", $COLOR_SUCCESS)
-		TrainSystem()
-		CommonRoutine("NoClanGamesEvent")
-		$g_bForceSwitchifNoCGEvent = True
-		checkSwitchAcc() ;switch to next account
-	EndIf
 
 	TrainSystem()
 	_RunFunction('DonateCC,Train')
