@@ -1274,6 +1274,7 @@ EndFunc   ;==>__RunFunction
 Func FirstCheck()
 	If Not $g_bRunState Then Return
 	SetLog("-- FirstCheck Loop --")
+	ZoomOut()
 	If _Sleep(50) Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
