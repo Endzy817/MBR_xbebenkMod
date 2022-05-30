@@ -142,100 +142,81 @@ Func CheckSwitchAcc()
 		EndIf
 	EndIf
 
-	Local $sLogSkip = ""
-	If Not $g_abDonateOnly[$g_iCurAccount] And $iWaitTime <= $g_iTrainTimeToSkip And Not $bForceSwitch Then
-		If Not $g_bRunState Then Return
-		If $iWaitTime > 0 Then $sLogSkip = " in " & Round($iWaitTime, 1) & " mins"
-		SetLog("Army is ready" & $sLogSkip & ", skip switching account", $COLOR_INFO)
-		SetSwitchAccLog(" - Army is ready" & $sLogSkip)
-		SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
-		If _Sleep(500) Then Return
+	If $g_bChkSmartSwitch = True Then ; Smart switch
+		SetDebugLog("-Smart Switch-")
+		$nMinRemainTrain = CheckTroopTimeAllAccount($bForceSwitch)
 
-	Else
-
-		If $g_bChkSmartSwitch = True Then ; Smart switch
-			SetDebugLog("-Smart Switch-")
-			$nMinRemainTrain = CheckTroopTimeAllAccount($bForceSwitch)
-
-			If $nMinRemainTrain <= 1 And Not $bForceSwitch And Not $g_bDonateLikeCrazy Then ; Active (force switch shall give priority to Donate Account)
-				SetDebugLog("Switch to or Stay at Active Account: " & $g_iNextAccount + 1, $COLOR_DEBUG)
-				$g_iDonateSwitchCounter = 0
-			Else
-				If $g_iDonateSwitchCounter < UBound($aDonateAccount) Then ; Donate
-					$g_iNextAccount = $aDonateAccount[$g_iDonateSwitchCounter]
-					$g_iDonateSwitchCounter += 1
-					SetDebugLog("Switch to Donate Account " & $g_iNextAccount + 1 & ". $g_iDonateSwitchCounter = " & $g_iDonateSwitchCounter, $COLOR_DEBUG)
-					SetSwitchAccLog(" - Donate Acc [" & $g_iNextAccount + 1 & "]")
-				Else ; Active
-					$g_iDonateSwitchCounter = 0
-				EndIf
-			EndIf
-		Else ; Normal switch (continuous)
-			SetDebugLog("-Normal Switch-")
-			$g_iNextAccount = $g_iCurAccount + 1
-			If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
-			While $abAccountNo[$g_iNextAccount] = False
-				$g_iNextAccount += 1
-				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0 ; avoid idle Account
-				SetDebugLog("- While Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
-			WEnd
-		EndIf
-
-		If Not $g_bRunState Then Return
-
-		SetDebugLog("- Current Account: " & $g_asProfileName[$g_iCurAccount] & " number: " & $g_iCurAccount + 1)
-		SetDebugLog("- Next Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
-
-		; Check if the next account is PBT and IF the remain train time is more than 2 minutes
-		If $g_abPBActive[$g_iNextAccount] And _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$g_iNextAccount]) > 2 Then
-			SetLog("Account " & $g_iNextAccount + 1 & " is in a Personal Break Time!", $COLOR_INFO)
-			SetSwitchAccLog(" - Account " & $g_iNextAccount + 1 & " is in PTB")
-			$g_iNextAccount = $g_iNextAccount + 1
-			If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
-			While $abAccountNo[$g_iNextAccount] = False
-				$g_iNextAccount += 1
-				If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0 ; avoid idle Account
-			WEnd
-		EndIf
-
-		If UBound($aActibePBTaccounts) + UBound($aDonateAccount) = UBound($aActiveAccount) Then
-			SetLog("All accounts set to Donate and/or are in PBT!", $COLOR_INFO)
-			SetSwitchAccLog("All accounts in PBT/Donate:")
-			; Just a Good User Log
-			For $i = 0 To $g_iTotalAcc
-				If $g_abDonateOnly[$i] Then SetSwitchAccLog(" - Donate Acc [" & $i + 1 & "]")
-				If $g_abPBActive[$i] Then SetSwitchAccLog(" - PBT Acc [" & $i + 1 & "]")
-			Next
-		EndIf
-
-		If $g_iNextAccount <> $g_iCurAccount Then
-			If $g_bChkFastSwitchAcc Then
-				If $g_bRequestTroopsEnable Then
-					If _Sleep(1000) Then Return
-					SetLog("Try RequestCC before switching account", $COLOR_DEBUG)
-					RequestCC()
-				EndIf
-				If $g_bForceSwitchifNoCGEvent Then
-					PrepareDonateCC()
-					DonateCC()
-					TrainSystem()
-				EndIf
-			Else
-				If $g_bRequestTroopsEnable Then
-					SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
-					RequestCC()
-					PrepareDonateCC()
-					DonateCC()
-					TrainSystem()
-				EndIf
-			EndIf
-			If Not $g_bForceSwitchifNoCGEvent Then _ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
-			CheckMainScreen(True, $g_bStayOnBuilderBase, "CheckSwitchAcc")
-			SwitchCOCAcc($g_iNextAccount)
+		If $nMinRemainTrain <= 1 And Not $bForceSwitch And Not $g_bDonateLikeCrazy Then ; Active (force switch shall give priority to Donate Account)
+			SetDebugLog("Switch to or Stay at Active Account: " & $g_iNextAccount + 1, $COLOR_DEBUG)
+			$g_iDonateSwitchCounter = 0
 		Else
-			SetLog("Staying in this account")
-			SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
+			If $g_iDonateSwitchCounter < UBound($aDonateAccount) Then ; Donate
+				$g_iNextAccount = $aDonateAccount[$g_iDonateSwitchCounter]
+				$g_iDonateSwitchCounter += 1
+				SetDebugLog("Switch to Donate Account " & $g_iNextAccount + 1 & ". $g_iDonateSwitchCounter = " & $g_iDonateSwitchCounter, $COLOR_DEBUG)
+				SetSwitchAccLog(" - Donate Acc [" & $g_iNextAccount + 1 & "]")
+			Else ; Active
+				$g_iDonateSwitchCounter = 0
+			EndIf
 		EndIf
+	Else ; Normal switch (continuous)
+		SetDebugLog("-Normal Switch-")
+		$g_iNextAccount = $g_iCurAccount + 1
+		If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+		While $abAccountNo[$g_iNextAccount] = False
+			$g_iNextAccount += 1
+			If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0 ; avoid idle Account
+			SetDebugLog("- While Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
+		WEnd
+	EndIf
+
+	If Not $g_bRunState Then Return
+
+	SetDebugLog("- Current Account: " & $g_asProfileName[$g_iCurAccount] & " number: " & $g_iCurAccount + 1)
+	SetDebugLog("- Next Account: " & $g_asProfileName[$g_iNextAccount] & " number: " & $g_iNextAccount + 1)
+
+	; Check if the next account is PBT and IF the remain train time is more than 2 minutes
+	If $g_abPBActive[$g_iNextAccount] And _DateDiff("n", _NowCalc(), $g_asTrainTimeFinish[$g_iNextAccount]) > 2 Then
+		SetLog("Account " & $g_iNextAccount + 1 & " is in a Personal Break Time!", $COLOR_INFO)
+		SetSwitchAccLog(" - Account " & $g_iNextAccount + 1 & " is in PTB")
+		$g_iNextAccount = $g_iNextAccount + 1
+		If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0
+		While $abAccountNo[$g_iNextAccount] = False
+			$g_iNextAccount += 1
+			If $g_iNextAccount > $g_iTotalAcc Then $g_iNextAccount = 0 ; avoid idle Account
+		WEnd
+	EndIf
+
+	If UBound($aActibePBTaccounts) + UBound($aDonateAccount) = UBound($aActiveAccount) Then
+		SetLog("All accounts set to Donate and/or are in PBT!", $COLOR_INFO)
+		SetSwitchAccLog("All accounts in PBT/Donate:")
+		; Just a Good User Log
+		For $i = 0 To $g_iTotalAcc
+			If $g_abDonateOnly[$i] Then SetSwitchAccLog(" - Donate Acc [" & $i + 1 & "]")
+			If $g_abPBActive[$i] Then SetSwitchAccLog(" - PBT Acc [" & $i + 1 & "]")
+		Next
+	EndIf
+
+	If $g_iNextAccount <> $g_iCurAccount Then
+		If $g_bChkFastSwitchAcc Then
+			If $g_bRequestTroopsEnable Then
+				If _Sleep(1000) Then Return
+				SetLog("Requesting CC troops before switching account", $COLOR_DEBUG)
+				_RunFunction('FstReq')
+			EndIf
+		Else
+			If $g_bRequestTroopsEnable Then
+				SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
+				_RunFunction('FstReq')
+				_RunFunction('DonateCC,Train')
+			EndIf
+		EndIf
+		If Not $g_bForceSwitchifNoCGEvent Then _ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
+		CheckMainScreen(True, $g_bStayOnBuilderBase, "CheckSwitchAcc")
+		SwitchCOCAcc($g_iNextAccount)
+	Else
+		SetLog("Staying in this account")
+		SetSwitchAccLog("Stay at [" & $g_iCurAccount + 1 & "]", $COLOR_SUCCESS)
 	EndIf
 	If Not $g_bRunState Then Return
 
