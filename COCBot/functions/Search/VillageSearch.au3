@@ -216,7 +216,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 
 		; ----------------- MOD -----------------------------------
 
-	  If $g_bTestSceneryAttack Then
+	If $g_bTestSceneryAttack Then
 		Local $sScenery = DetectScenery($g_aVillageSize[6])
 
 		If $sScenery = "Clashy Construction" Then
@@ -239,7 +239,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			ExitLoop
 		EndIf
 
-	  EndIf
+	EndIf
 
 
 
@@ -408,34 +408,10 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 			$g_bDebugDeadBaseImage = True
 		EndIf
 		If $g_bDebugDeadBaseImage Then setZombie()
-		Local $i = 0
-		While $i < 100
-			If _Sleep($DELAYVILLAGESEARCH2) Then Return
-			$i += 1
-			_CaptureRegions()
-			If _ColorCheck(_GetPixelColor($NextBtn[0], $NextBtn[1]), Hex($NextBtn[2], 6), $NextBtn[3]) And IsAttackPage() Then
-				$g_bCloudsActive = True
-				ClickP($NextBtn, 1, 0, "#0155") ;Click Next
-				ExitLoop
-			Else
-				SetDebugLog("Wait to see Next Button... " & $i, $COLOR_DEBUG)
-			EndIf
-			If $i >= 99 Or isProblemAffect() Or (Mod($i, 10) = 0 And checkObstacles_Network(False, False)) Then ; if we can't find the next button or there is an error, then restart
-				$g_bIsClientSyncError = True
-				checkMainScreen(True, $g_bStayOnBuilderBase, "VillageSearch")
-				If $g_bRestart Then
-					$g_iNbrOfOoS += 1
-					UpdateStats()
-					SetLog("Couldn't locate Next button", $COLOR_ERROR)
-					PushMsg("OoSResources")
-				Else
-					SetLog("Have strange problem Couldn't locate Next button, Restarting CoC and Bot...", $COLOR_ERROR)
-					$g_bIsClientSyncError = False ; disable fast OOS restart if not simple error and try restarting CoC
-					CloseCoC(True)
-				EndIf
-				Return
-			EndIf
-		WEnd
+		; Endzy mod - fast click next button
+		SetDebugLogLog("Clicking Next Button...", $COLOR_DEBUG)
+		$g_bCloudsActive = True
+		Click(Random(715,840,1),Random(500,540,1)) ;Click(770,520)
 
 		If _Sleep($DELAYRESPOND) Then Return
 		$Result = getAttackDisable(346, 182) ; Grab Ocr for TakeABreak check
