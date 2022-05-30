@@ -409,7 +409,7 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		EndIf
 		If $g_bDebugDeadBaseImage Then setZombie()
 		; Endzy mod - fast click next button
-		SetDebugLogLog("Clicking Next Button...", $COLOR_DEBUG)
+		SetDebugLog("Clicking Next Button...", $COLOR_DEBUG)
 		$g_bCloudsActive = True
 		Click(Random(715,840,1),Random(500,540,1)) ;Click(770,520)
 
