@@ -1403,7 +1403,7 @@ Func FirstCheckRoutine()
 	TrainSystem()
 	_RunFunction('DonateCC,Train')
 	If Not $g_bRunState Then Return
-	Local $aRndFuncList = ['Collect', 'FstReq', 'ReplayShare', 'UpgradeHeroes', 'ChkLeague','BuilderBase', 'CheckTombs', 'CleanYard', 'Laboratory', 'DailyChallenge', 'CollectAchievements', 'PetHouse', 'DailyChallenge', 'CollectAchievements']
+	Local $aRndFuncList = ['Collect', 'FstReq', 'ReplayShare', 'UpgradeHeroes', 'ChkLeague', 'BuilderBase', 'CheckTombs', 'CleanYard', 'Laboratory', 'DailyChallenge', 'CollectAchievements', 'PetHouse', 'CollectAchievements']
 	_ArrayShuffle($aRndFuncList)
 	For $Index In $aRndFuncList
 		If Not $g_bRunState Then Return
