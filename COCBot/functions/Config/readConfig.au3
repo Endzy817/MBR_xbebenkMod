@@ -592,7 +592,8 @@ Func ReadConfig_600_6()
 	IniReadS($g_bChkForceSwitchifNoCGEvent, $g_sProfileConfigPath, "other", "ForceSwitchifNoCGEvent", True, "Bool")
 	IniReadS($g_bEnableCCSleep, $g_sProfileConfigPath, "other", "EnableCCSleep", False, "Bool")
 	IniReadS($g_bSkipDT, $g_sProfileConfigPath, "other", "SkipDT", False, "Bool")
-
+	IniReadS($g_bRequestTroopsEnable, $g_sProfileConfigPath, "other", "ChkRequestTroopsEnable", True, "Bool") ;Make config name for request cc troops
+	IniReadS($g_bChkDonate, $g_sProfileConfigPath, "other", "ChkDonateTroops", True, "Bool") ;Make config name for donate troops
 	ReadConfigBuilderBaseMod()
 EndFunc   ;==>ReadConfig_600_6
 

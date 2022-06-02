@@ -528,7 +528,8 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ForceSwitchifNoCGEvent", $g_bChkForceSwitchifNoCGEvent)
 	_Ini_Add("other", "EnableCCSleep", $g_bEnableCCSleep)
 	_Ini_Add("other", "SkipDT", $g_bSkipDT)
-	
+	_Ini_Add("other", "ChkRequestTroopsEnable", $g_bRequestTroopsEnable) ;Make config name for request cc troops
+	_Ini_Add("other", "ChkDonateTroops", $g_bChkDonate) ;Make config name for request cc troops
 	SaveBuilderBaseMod()
 EndFunc   ;==>SaveConfig_600_6
 
