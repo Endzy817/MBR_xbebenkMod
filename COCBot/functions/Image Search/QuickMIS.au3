@@ -59,6 +59,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 		;	SetLog("DLL Error", $COLOR_RED)
 
 		Else
+			Local $DLLRes = 0
 			Switch $ValueReturned
 
 				Case "BC1" ; coordinates of first/one image found + boolean value
@@ -73,7 +74,8 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					Local $aCords = decodeSingleCoord($Result)
 					$g_iQuickMISX = $aCords[0] + $Left
 					$g_iQuickMISY = $aCords[1] + $Top
-
+					$g_iQuickMISWOffSetX = $aCords[0] + $left
+					$g_iQuickMISWOffSetY = $aCords[1] + $top
 					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
 					$g_iQuickMISName = $Name
 
