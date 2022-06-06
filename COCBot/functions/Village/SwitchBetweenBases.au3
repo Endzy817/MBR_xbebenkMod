@@ -23,8 +23,13 @@ Func SwitchBetweenBases($ForcedSwitchTo = Default)
 		EndIf
 	EndIf
 	
-	If $bIsOnBuilderBase And $ForcedSwitchTo = "BB" Then
-		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_ERROR)
+	If $ForcedSwitchTo = "BB" And IsOnBuilderBase() Then
+		SetLog("Already on BuilderBase, Skip SwitchBetweenBases", $COLOR_INFO)
+		Return True
+	EndIf
+	
+	If $ForcedSwitchTo = "Main" And isOnMainVillage() Then
+		SetLog("Already on MainVillage, Skip SwitchBetweenBases", $COLOR_INFO)
 		Return True
 	EndIf
 	
@@ -82,8 +87,8 @@ Func SwitchTo($To = "BB")
 			ExitLoop
 		Else
 			SetLog($sTile & " Not Found, try again...", $COLOR_ERROR)
-			If $g_bDebugClick Or $g_bDebugSetlog Then SaveDebugImage("SwitchBetweenBases", True)
-			ZoomOutHelper()
+			SaveDebugImage("SwitchBetweenBases", True)
+			ZoomOutHelper("SwitchBetweenBases")
 			ContinueLoop
 		EndIf
 		_Sleep(1000)
