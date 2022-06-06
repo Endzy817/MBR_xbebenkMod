@@ -211,7 +211,7 @@ Func CheckSwitchAcc()
 				_RunFunction('DonateCC,Train')
 			EndIf
 		EndIf
-		If Not $g_bForceSwitchifNoCGEvent Then _ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
+		;If Not $g_bForceSwitchifNoCGEvent Then _ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
 		CheckMainScreen(True, $g_bStayOnBuilderBase, "CheckSwitchAcc")
 		SwitchCOCAcc($g_iNextAccount)
 	Else
