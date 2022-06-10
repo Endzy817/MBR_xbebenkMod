@@ -28,7 +28,7 @@ Opt("MustDeclareVars", 1)
 
 Global $g_sBotTitle = "" ;~ Don't assign any title here, use Func UpdateBotTitle()
 Global $g_hFrmBot = 0 ; The main GUI window
-
+#cs
 Local $AutoItVersion = @AutoItVersion
 Local $aAutoItVersion = StringSplit($AutoItVersion, ".", 2)
 If Number($aAutoItVersion[2]) > 14 Then
@@ -41,7 +41,7 @@ If Number($aAutoItVersion[2]) > 14 Then
 			Exit
 	EndSwitch
 EndIf
-
+#ce
 ; MBR includes
 #include "COCBot\MBR Global Variables.au3"
 #include "COCBot\functions\Config\DelayTimes.au3"
