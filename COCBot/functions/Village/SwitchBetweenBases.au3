@@ -82,6 +82,7 @@ Func SwitchTo($To = "BB")
 		SetLog("[" & $i & "] Trying to Switch to " & $sSwitchTo, $COLOR_INFO)
 		If $i > 1 Then ZoomOut() ;zoomout only if 1st try failed
 		If QuickMIS("BC1", $Dir, $x, $y, $x1, $y1) Then
+			If $g_iQuickMISName = "BBBoatBadge" Then $g_iQuickMISY += 10
 			Click($g_iQuickMISX, $g_iQuickMISY)
 			_Sleep(1000)
 			ExitLoop
@@ -110,6 +111,7 @@ Func SwitchTo($To = "BB")
 	If Not $g_bRunState Then Return
 	If Not $bRet Then 
 		SetLog("SwitchBetweenBases Failed", $COLOR_ERROR)
+		SaveDebugImage("SwitchBetweenBases", True)
 		CloseCoC(True) ; restart coc
 		_SleepStatus(10000) ;give time for coc loading
 		checkMainScreen(True, $g_bStayOnBuilderBase, "SwitchBetweenBases")
@@ -120,5 +122,6 @@ EndFunc
 Func TestloopBB()
 	While True
 		BuilderBase()
+		If Not $g_bRunState Then Return
 	WEnd
 EndFunc

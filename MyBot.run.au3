@@ -1587,7 +1587,7 @@ Func BuilderBase()
 	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-
+		ZoomOut()
 		$g_iBBAttacked = True	; Reset Variable
 		BuilderBaseReport()
 		CollectBuilderBase()
@@ -1637,8 +1637,8 @@ Func BuilderBase()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		; switch back to normal village
 		ZoomOut(True) ;directly zoom 
-		SwitchBetweenBases("Main")
 		$g_bStayOnBuilderBase = False
+		SwitchBetweenBases("Main")
 	EndIf
 	
 	If Not $g_bStayOnBuilderBase And IsOnBuilderBase() Then SwitchBetweenBases("Main")
