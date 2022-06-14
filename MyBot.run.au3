@@ -731,7 +731,7 @@ Func runBot() ;Bot that runs everything in order
 		_RunFunction('DonateLoop')
 	EndIf
 	If Not $g_bRunState Then Return
-	checkSwitchAcc() ;switch to next account
+	;checkSwitchAcc() ;switch to next account
 
 	While 1
 		;Restart bot after these seconds
