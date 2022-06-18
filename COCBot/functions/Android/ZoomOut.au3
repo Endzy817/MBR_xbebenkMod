@@ -145,6 +145,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 		ZoomOutHelper("DefaultZoomOut")
 		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 	EndIf
+	If Not $g_bRunState Then Return
 	
 	If StringInStr($aPicture[0], "zoomou") = 0 Then
 		If $g_bDebugSetlog Then
@@ -161,7 +162,7 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	    Local $tryCtrlWheelScroll = False
 		
 		If IsArray($aPicture) Then
-			While StringInStr($aPicture[0], "zoomout") = 0 and Not $tryCtrlWheelScroll
+			While IsArray($aPicture) And StringInStr($aPicture[0], "zoomout") = 0 and Not $tryCtrlWheelScroll
 
 				AndroidShield("DefaultZoomOut") ; Update shield status
 				If $bAndroidZoomOut Then
@@ -199,10 +200,11 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 				$i += 1  ; add one to index value to prevent endless loop if controlsend fails
 				ForceCaptureRegion()
 				$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
-				If $aPicture[0] = "" And $aPicture[1] = "0" Then 
+				If IsArray($aPicture) And $aPicture[0] = "" And $aPicture[1] = "0" Then 
 					ZoomOutHelper("DefaultZoomOut")
 					$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 				EndIf
+				If Not $g_bRunState Then Return
 			WEnd
 		EndIf
 			
@@ -317,6 +319,7 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 				ZoomOutHelper("DefaultZoomOut")
 				$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 			EndIf
+			If Not $g_bRunState Then Return
 		 WEnd
 
 		 If $CenterMouseWhileZooming And $AndroidZoomOut = False Then MouseMove($aMousePos[0], $aMousePos[1], 0)
@@ -665,18 +668,16 @@ Func ZoomInMEmu($Region = "Top")
 		Case "Top"
 			ClickDrag(400, 100, 400, 600, 200)
 			If _Sleep(500) Then Return
-			ClickDrag(400, 100, 400, 300, 200)
+			ClickDrag(400, 100, 400, 250, 200)
 		Case "Left"
 			ClickDrag(100, 400, 800, 400, 200)
 			If _Sleep(500) Then Return
 		Case "Bottom"
 			ClickDrag(400, 500, 400, 100, 200)
 			If _Sleep(500) Then Return
-			ClickDrag(400, 500, 400, 300, 200)
+			ClickDrag(400, 500, 400, 350, 200)
 		Case "Right"
 			ClickDrag(800, 400, 100, 400, 200)
-			If _Sleep(500) Then Return
-			ClickDrag(400, 100, 400, 300, 200)
 	EndSwitch
 	Return True
 EndFunc

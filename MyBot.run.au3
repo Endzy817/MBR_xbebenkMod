@@ -812,7 +812,7 @@ Func runBot() ;Bot that runs everything in order
 			If $g_bChkFastSwitchAcc Then
 				Local $aRndFuncList = ['UpgradeHeroes', 'PetHouse', 'BuilderBase']
 			Else
-				Local $aRndFuncList = ['Collect', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'BuilderBase']
+				Local $aRndFuncList = ['Collect', 'CollectAchievements', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'PetHouse', 'BuilderBase']
 			EndIf
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -1005,6 +1005,7 @@ Func _Idle() ;Sequence that runs until Full Army
 
 		If $g_iCommandStop = -1 Then ; Check if closing bot/emulator while training and not in halt mode
 			SmartWait4Train()
+			checkObstacles()
 			If Not $g_bRunState Then Return
 			If $g_bRestart Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
 		EndIf
@@ -1579,8 +1580,8 @@ Func FirstCheckRoutine()
 	EndIf
 	
 	If Not $g_bRunState Then Return
-	RequestCC(False)
-	checkArmyCamp(False, True)
+	RequestCC(True)
+	checkArmyCamp(True, True)
 	PrepareDonateCC()
 	_Sleep(1000)
 	DonateCC()

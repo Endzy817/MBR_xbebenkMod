@@ -99,7 +99,7 @@ Func SearchUpgrade($bTest = False)
 		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost Then ;skip if will use for lowcost upgrade
 			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
 			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
-				ZoomOut()
+				ZoomOut(True)
 				Return ;no builder, exit
 			EndIf
 			If ClickMainBuilder($bTest) Then ClickDragAUpgrade("down"); after search reset upgrade window, scroll to top list
@@ -552,6 +552,10 @@ Func DoUpgrade($bTest = False)
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(598, 522) ; get cost
 			$g_aUpgradeResourceCostDuration[2] = getHeroUpgradeTime(578, 465) ; get duration
 			$bHeroUpgrade = True
+		Case "Clan Castle"
+			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 520, 430, 700, 500) ; get resource
+			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(550, 453) ; get cost
+			$g_aUpgradeResourceCostDuration[2] = "Instance Upgrade"
 		Case Else
 			$g_aUpgradeResourceCostDuration[0] = QuickMIS("N1", $g_sImgAUpgradeRes, 460, 480, 500, 550) ; get resource
 			$g_aUpgradeResourceCostDuration[1] = getResourcesBonus(366, 487) ; get cost
@@ -592,6 +596,8 @@ Func DoUpgrade($bTest = False)
 		Switch $g_aUpgradeNameLevel[1]
 			Case "Barbarian King", "Archer Queen", "Grand Warden", "Royal Champion", "poyal Champion"
 				Click(660, 560)
+			Case "Clan Castle"
+				Click(600, 460)
 			Case Else
 				Click(440, 530)
 		EndSwitch
@@ -745,13 +751,18 @@ Func AUNewBuildings($x, $y, $bTest = False, $isWall = False)
 			If QuickMIS("BC1", $g_sImgGreenCheck, 100, 80, 740, 560) Then
 				For $ProMac = 0 To 9
 					If Not $g_bRunState Then Return
-					Click($g_iQuickMISX, $g_iQuickMISY + 5)
-					If _Sleep(500) Then Return
-					If IsGemOpen(True) Then
-						SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
+					If Not $bTest Then 
+						Click($g_iQuickMISX, $g_iQuickMISY + 3)
+						If _Sleep(500) Then Return
+						If IsGemOpen(True) Then
+							SetLog("Not Enough resource! Exiting", $COLOR_ERROR)
+							ExitLoop
+						Endif
+						AutoUpgradeLogPlacingWall($aWall, $aCostWall)
+					Else
+						SetLog("Only Test, should place wall on [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_SUCCESS)
 						ExitLoop
-					Endif
-					AutoUpgradeLogPlacingWall($aWall, $aCostWall)
+					EndIf
 				Next
 				Click($g_iQuickMISX - 75, $g_iQuickMISY)
 				Return True
@@ -1146,13 +1157,12 @@ Func IsTHLevelAchieved()
 EndFunc
 
 Func getMostBottomCost()
-	Local $TmpUpgradeCost, $TmpName, $ret
+	Local $TmpUpgradeCost, $ret
 	Local $Icon = QuickMIS("CNX", $g_sImgResourceIcon, 300, 300, 450, 360)
 	If IsArray($Icon) And UBound($Icon) > 0 Then
-		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord
+		_ArraySort($Icon, 1, 0, 0, 2) ;sort by y coord, descending
 		$TmpUpgradeCost = getOcrAndCapture("coc-buildermenu-cost", $Icon[0][1], $Icon[0][2] - 12, 120, 20, True) ;check most bottom upgrade cost
-		$TmpName = getBuildingName($Icon[0][1] - 200, $Icon[0][2] - 8)
-		$ret = $TmpName[0] & "|" & $TmpUpgradeCost
+		$ret = $Icon[0][0] & "|" & $TmpUpgradeCost
 	EndIf
 	Return $ret
 EndFunc
