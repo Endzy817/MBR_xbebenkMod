@@ -214,6 +214,7 @@ Func CheckSwitchAcc()
 					If _Sleep(1000) Then Return
 					SetLog("Requesting CC troops before switching account", $COLOR_DEBUG)
 					_RunFunction('FstReq')
+				EndIf
 			Else
 				If $g_bRequestTroopsEnable Then
 					SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
