@@ -33,7 +33,7 @@ Local $AutoItVersion = @AutoItVersion
 Local $aAutoItVersion = StringSplit($AutoItVersion, ".", 2)
 If Number($aAutoItVersion[2]) > 14 Then
 	Local $answer = MsgBox(0x41, @ScriptName , "Unsupported AutoIt Version" & @CRLF & @CRLF & "Your Installed AutoIt Version : " & $AutoItVersion & @CRLF & "Please Download and Install AutoIt Version 3.3.14.5" & @CRLF & "Click OK will open archive download link for lower version of AutoIt")
-	Switch $answer 
+	Switch $answer
 		Case 1
 			Run(@ComSpec & " /c " & 'start www.autoitscript.com/autoit3/files/archive/autoit/', "", @SW_HIDE)
 			Exit
@@ -107,9 +107,9 @@ Func InitializeBot()
 		Local $NumVD = _GetEnumVirtDskt()
 		If $NumVD = 1 Then _CreateNewVirtDskt()
     EndIf
-	
+
 	ProcessCommandLine()
-	
+
 	If FileExists(@ScriptDir & "\EnableMBRDebug.txt") Then ; Set developer mode
 		$g_bDevMode = True
 		Local $aText = FileReadToArray(@ScriptDir & "\EnableMBRDebug.txt") ; check if special debug flags set inside EnableMBRDebug.txt file
@@ -671,7 +671,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 
 	; Check the Supported Emulator versions
 	CheckEmuNewVersions()
-	If $g_iRemUnusedGUI Then 
+	If $g_iRemUnusedGUI Then
 		SetLog("Warning: SomeGUI removed to allow more instance", $COLOR_ACTION)
 		RemControl()
 	EndIf
@@ -710,13 +710,13 @@ EndFunc   ;==>MainLoop
 
 Func runBot() ;Bot that runs everything in order
 	Local $iWaitTime
-	
+
 	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-		If checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop") Then ZoomOut() 
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "MainLoop") Then ZoomOut()
 	EndIf
-	
-	If $g_bIsHidden Then 
+
+	If $g_bIsHidden Then
 		HideAndroidWindow(True, Default, Default, "btnHide")
 		updateBtnHideState()
 	EndIf
@@ -1022,10 +1022,10 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 	ClickAway()
 	Local $ZoomOutResult = SearchZoomOut(False, True, "", True)
-	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then 
-		If checkMainScreen(False, $g_bStayOnBuilderBase, "AttackMain") Then ZoomOut() 
+	If IsArray($ZoomOutResult) And $ZoomOutResult[0] = "" Then
+		If checkMainScreen(False, $g_bStayOnBuilderBase, "AttackMain") Then ZoomOut()
 	EndIf
-	
+
 	If IsSearchAttackEnabled() Then
 		If (IsSearchModeActive($DB) And checkCollectors(True, False)) Or IsSearchModeActive($LB) Then
 			;If ProfileSwitchAccountEnabled() And ($g_aiAttackedCountSwitch[$g_iCurAccount] <= $g_aiAttackedCount - 2) Then checkSwitchAcc()
@@ -1159,7 +1159,7 @@ Func __RunFunction($action)
 				; if in "Halt/Donate" don't skip near full army
 				If (Not SkipDonateNearFullTroops(True) Or $g_iCommandStop = 3 Or $g_iCommandStop = 0) And BalanceDonRec(True) Then DonateCC()
 			EndIf
-			
+
 			If $g_bTrainEnabled Then ; check for training enabled in halt mode
 				If $g_iActualTrainSkip < $g_iMaxTrainSkip Then
 					TrainSystem()
@@ -1260,99 +1260,14 @@ Func __RunFunction($action)
 			CheckLeague()
 		Case "FstReq"
 			RequestCC(1,1,0,1) ; fast request CC
+		Case "BBRTN0"
+			BBRTN0()
 		Case "EarlyUpgChk"
-			If $g_iFreeBuilderCount > 0 And (_ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1)) Then
-				If _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
-					Laboratory()
-					VillageReport(True, True)
-				EndIf
-				Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
-				If Not $g_bRunState Then Return
-				CheckTombs()
-				CleanYard()
-				_Sleep(8000) ;add wait after clean yard
-				If Not $g_bRunState Then Return
-				If $g_bUpgradeWallEarly Then
-					SetLog("Check Upgrade Wall Early", $COLOR_INFO)
-					_RunFunction('UpgradeWall') ;UpgradeWall()
-				EndIf
-				If Not $g_bRunState Then Return
-				If $g_bAutoUpgradeEarly Then
-					SetLog("Check Auto Upgrade Early", $COLOR_INFO)
-					checkArmyCamp(True, True) ;need to check reserved builder for heroes
-					AutoUpgrade()
-				EndIf
-				VillageReport()
-				ZoomOut()
-				UpgradeHeroes() ;Early Hero Upgrade
-                ZoomOut()
-			EndIf
-			;UpgradeHeroes() ;Early Hero Upgrade
+			EU0()
 		Case "DonateLoop"
-			If $g_abDonateOnly[$g_iCurAccount] Then
-				SetLog("-- DONATE ONLY ENABLED --")
-				ZoomOut()
-				checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
-				VillageReport(True, True)
-				Local $loopcount = 1
-				While 1
-					If Not $g_bRunState Then Return
-					$loopcount += 1
-					If _Sleep(1000) Then Return
-					Setlog("Loop:[" & $loopcount & "] -- DONATE MODE --", $COLOR_SUCCESS)
-
-					If Not $g_bRunState Then Return
-					If _Sleep(1000) Then Return
-					VillageReport()
-					If _Sleep(1000) Then Return
-					If Not $g_bRunState Then Return
-
-					Local $aRndFuncList = ['Collect', 'FstReq', 'CleanYard', 'ForgeClanCapitalGold', 'CollectCCGold']
-					For $Index In $aRndFuncList
-						If Not $g_bRunState Then Return
-						_RunFunction($Index)
-						If _Sleep(1000) Then Return
-						If $g_bRestart Then Return
-					Next
-
-					If Not $g_bRunState Then Return
-					If _Sleep(3000) Then Return
-					_RunFunction('DonateCC,Train')
-					If Not $g_bRunState Then Return
-					checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
-
-					If $loopcount > 3 Then
-						Local $aRndFuncList = ['CleanYard', 'BuilderBase']
-						For $Index In $aRndFuncList
-							If Not $g_bRunState Then Return
-							_RunFunction($Index)
-							If _Sleep(1000) Then Return
-							If $g_bRestart Then Return
-						Next
-						If _Sleep(2000) Then Return
-						checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
-						If _Sleep(2000) Then Return
-					EndIf
-
-					If Not $g_bRunState Then Return
-
-					If $loopcount > 5 Then
-						SetLog("Looped 5 times, exiting donate loop now!", $COLOR_INFO)
-						If Not $g_bRunState Then Return
-						Laboratory()
-						If Not $g_bRunState Then Return
-						If _Sleep(2000) Then Return
-						ExitLoop
-					EndIf
-
-					If Not $g_bRunState Then Return
-				WEnd
-				If Not $g_bRunState Then Return
-				SetLog("Attack one time before switching account", $COLOR_INFO)
-				_RunFunction('DonateModeAtk')
-				If Not $g_bRunState Then Return
-				checkSwitchAcc() ;switch to next account
-			EndIf
+			DL0()
+		Case "DonateModeAtk"
+			DMA0()
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1364,10 +1279,11 @@ EndFunc   ;==>__RunFunction
 Func FirstCheck()
 	If Not $g_bRunState Then Return
 	SetLog("-- FirstCheck Loop --")
-	If _Sleep(50) Then Return
+	ZoomOut()
+	If _Sleep(500) Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
 	VillageReport(True, True)
-	
+
 	If ProfileSwitchAccountEnabled() And $g_abDonateOnly[$g_iCurAccount] Then Return
 
 	$g_bRestart = False
@@ -1404,55 +1320,7 @@ Func FirstCheck()
 		applyConfig()
 		saveConfig()
 	EndIf
-	#cs
-	If $g_iTownHallLevel > 5 Then
-		If $g_bchkSyncTHWall Then
-			For $z = 0 To 2
-				$g_aUpgradeWall[$z] = $g_iTownHallLevel - 2 + $z - 4
-				SetDebugLog("Set WallUpgrade [" & $z & "] -> Level = " & $g_aUpgradeWall[$z] + 4, $COLOR_INFO)
-			Next
-			;SaveResource 			 	 0 = TH6	  TH7		TH8			TH9		TH10	TH11	TH12
-			Local $WallSaveResourceGold[7] = [750000, 1000000, 2000000, 4000000, 5500000, 8500000, 11500000]
-			Local $WallSaveResourceElix[7] = [750000, 1500000, 1500000, 2000000, 3000000, 8000000, 10500000]
-			For $j = 0 To UBound($WallSaveResourceGold) - 1
-				If Int($g_iTownHallLevel) - 6 = $j Then
-					If IsGoldFull() And $g_aiCurrentLoot[$eLootGold] < $WallSaveResourceGold[$j] Then 
-						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j] - Abs($WallSaveResourceGold[$j] - $g_aiCurrentLoot[$eLootGold])
-					Else
-						$g_iUpgradeWallMinGold = $WallSaveResourceGold[$j]
-					EndIf
-					If IsElixirFull() And $g_aiCurrentLoot[$eLootElixir] < $WallSaveResourceElix[$j] Then 
-						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j] - Abs($WallSaveResourceElix[$j] - $g_aiCurrentLoot[$eLootElixir])
-					Else
-						$g_iUpgradeWallMinElixir = $WallSaveResourceElix[$j]
-					EndIf
-					SetDebugLog("Set Gold WallSaveResource = " & $g_iUpgradeWallMinGold, $COLOR_INFO)
-					SetDebugLog("Set Elix WallSaveResource = " & $g_iUpgradeWallMinElixir, $COLOR_INFO)
-				EndIf
-			Next
-		EndIf
-		applyConfig()
-		If $g_bAlwaysDropHero Then
-			If $g_iTownHallLevel > 12 Then
-				GUICtrlSetState($g_hChkABChampionAttack, $GUI_CHECKED)
-				GUICtrlSetState($g_hChkDBChampionAttack, $GUI_CHECKED)
-			EndIf
-			If $g_iTownHallLevel > 10 Then
-				GUICtrlSetState($g_hChkABWardenAttack, $GUI_CHECKED)
-				GUICtrlSetState($g_hChkDBWardenAttack, $GUI_CHECKED)
-			EndIf
-			If $g_iTownHallLevel > 8 Then
-				GUICtrlSetState($g_hChkABQueenAttack, $GUI_CHECKED)
-				GUICtrlSetState($g_hChkDBQueenAttack, $GUI_CHECKED)
-			EndIf
-			If $g_iTownHallLevel > 6 Then
-				GUICtrlSetState($g_hChkABKingAttack, $GUI_CHECKED)
-				GUICtrlSetState($g_hChkDBKingAttack, $GUI_CHECKED)
-			EndIf
-		EndIf
-		saveConfig()
-	EndIf
-    #ce
+
 	If Not $g_bRunState Then Return
 	VillageReport()
 	chkShieldStatus()
@@ -1467,11 +1335,11 @@ Func FirstCheck()
 		SetLog("Switching back to normal setting after no elixir to train ...", $COLOR_SUCCESS)
 		Return ; Restart bot loop to reset $g_iCommandStop & $g_bTrainEnabled + $g_bDonationEnabled via BotCommand()
 	EndIf
-	
+
 	_RunFunction('EarlyUpgChk')
 
 	If BotCommand() Then btnStop()
-	
+
 	If ProfileSwitchAccountEnabled() And ($g_iCommandStop = 0 Or $g_iCommandStop = 1) Then
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
@@ -1487,7 +1355,7 @@ Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
-#cs	If $g_bChkCGBBAttackOnly Then
+	If $g_bChkCGBBAttackOnly Then
 		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
 		For $count = 1 to 11
 			If Not $g_bRunState Then Return
@@ -1495,8 +1363,8 @@ Func FirstCheckRoutine()
 				SetLog("Something maybe wrong, exiting to MainLoop!", $COLOR_INFO)
 				ExitLoop
 			EndIf
-			
-			If _ClanGames(False, $g_bChkForceBBAttackOnClanGames) Then 
+
+			If _ClanGames(False, $g_bChkForceBBAttackOnClanGames) Then
 				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
 				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
 					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
@@ -1510,7 +1378,7 @@ Func FirstCheckRoutine()
 				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
 			EndIf
 			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
-		Next	
+		Next
 	Else
 		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
 			SetLog("Check ClanGames Early", $COLOR_INFO)
@@ -1522,31 +1390,34 @@ Func FirstCheckRoutine()
 			EndIf
 		EndIf
 	EndIf
-	
+
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 Then 
+	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 Then
 		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
 		PrepareDonateCC()
 		DonateCC()
 		TrainSystem()
 		checkSwitchAcc() ;switch to next account
-	EndIf	
-#ce	
+	EndIf
+
+; ------------------ F I R S T  A T T A C K ------------------
 	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
 		If Not $g_bRunState Then Return
-		If $g_bDonateEarly Then
-			SetLog("Donate Early Enabled", $COLOR_INFO)
-			checkArmyCamp(True, True)
-			_Sleep(1000)
-			PrepareDonateCC()
-			DonateCC()
-		EndIf
+		;If $g_bDonateEarly Then
+		;	SetLog("Donate Early Enabled", $COLOR_INFO)
+		;	checkArmyCamp(True, True)
+		;	_Sleep(1000)
+		;	PrepareDonateCC()
+		;	DonateCC()
+		;EndIf
+		RequestCC() ; only type CC text req here
 		TrainSystem()
 		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 		If $g_bIsFullArmywithHeroesAndSpells Then
+			Idle() ; if army is not ready amd close while training enabled
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
@@ -1554,14 +1425,14 @@ Func FirstCheckRoutine()
 				While True
 					$g_bRestart = False
 					If Not $g_bRunState Then Return
-					If AttackMain($g_bSkipDT) Then 
+					If AttackMain($g_bSkipDT) Then
 						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
-						If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
+						If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut()
 						ExitLoop
 					Else
 						If $g_bForceSwitch Then ExitLoop ;exit here
 						$loopcount += 1
-						If $loopcount > 5 Then 
+						If $loopcount > 5 Then
 							Setlog("1st Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
 							ExitLoop
 						Else
@@ -1570,11 +1441,11 @@ Func FirstCheckRoutine()
 						If Not $g_bRunState Then Return
 					EndIf
 				Wend
-			;	If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then 
-			;		SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-			;		SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
-			;		GotoBBTodoCG() ;force go to bb todo event 
-			;	EndIf 
+				If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+					SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
+					GotoBBTodoCG() ;force go to bb todo event
+				EndIf
 				If $g_bOutOfGold Then
 					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
 					$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
@@ -1585,19 +1456,23 @@ Func FirstCheckRoutine()
 		EndIf
 	EndIf
     If Not $g_bRunState Then Return
-	
 	TrainSystem()
-	_RunFunction('DonateCC,Train')
 	If Not $g_bRunState Then Return
-	Local $aRndFuncList = ['Collect', 'FstReq', 'ReplayShare', 'UpgradeHeroes', 'CheckLeague', 'BuilderBase', 'CheckTombs', 'CleanYard', 'Laboratory', 'DailyChallenge', 'CollectAchievements', 'PetHouse', 'CollectAchievements', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
-	_ArrayShuffle($aRndFuncList)
-	For $Index In $aRndFuncList
-		If Not $g_bRunState Then Return
-		_RunFunction($Index)
-		If _Sleep(100) Then Return
-		If $g_bRestart Then Return
-	Next
-	
+
+	; forced switch after first attack if cg point is almost max
+	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then
+		SetLog("ClanGames point almost max/maxed, Forced switch account!", $COLOR_SUCCESS)
+		TrainSystem()
+		_RunFunction('DonateCC,Train')
+		CommonRoutine("NoClanGamesEvent")
+		$g_bForceSwitchifNoCGEvent = True
+		checkSwitchAcc() ;switch to next account
+	EndIf
+
+	If Not $g_bRunState Then Return
+	CommonRoutine("QKR1")
+
+; ------------------ S E C O N D  A T T A C K ------------------
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
 		;RequestCC() ;only do requestCC here
@@ -1613,6 +1488,7 @@ Func FirstCheckRoutine()
 			TrainSystem()
 			SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 			If $g_bIsFullArmywithHeroesAndSpells Then
+				Idle() ; if army is not ready amd close while training enabled
 				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 					Setlog("Before any other routine let's attack!", $COLOR_INFO)
 					$g_bRestart = False ;idk this flag make sometimes bot cannot attack on second time
@@ -1620,15 +1496,15 @@ Func FirstCheckRoutine()
 					While True
 						$g_bRestart = False
 						If Not $g_bRunState Then Return
-						If AttackMain($g_bSkipDT) Then 
+						If AttackMain($g_bSkipDT) Then
 							Setlog("[" & $loopcount & "] 2nd Attack Loop Success", $COLOR_SUCCESS)
 							$b_SuccessAttack = True
-							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut() 
+							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut()
 							ExitLoop
 						Else
 							If $g_bForceSwitch Then ExitLoop ;exit here
 							$loopcount += 1
-							If $loopcount > 5 Then 
+							If $loopcount > 5 Then
 								Setlog("2nd Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
 								ExitLoop
 							Else
@@ -1637,11 +1513,11 @@ Func FirstCheckRoutine()
 							If Not $g_bRunState Then Return
 						EndIf
 					Wend
-				;	If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then 
-				;		SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-				;		SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
-				;		GotoBBTodoCG() ;force go to bb todo event 
-				;	EndIf 
+					If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+						SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+						SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
+						GotoBBTodoCG() ;force go to bb todo event
+					EndIf
 					If $g_bOutOfGold Then
 						SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
 						$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
@@ -1655,30 +1531,34 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 
 	TrainSystem()
-	_RunFunction('DonateCC,Train')
-	
+	_RunFunction('DonateCC,Train') ; 1st donateCC
+
 	If Not $g_bRunState Then Return
-	;CommonRoutine("FirstCheckRoutine")
-	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then 
+	CommonRoutine("FCR0") ; FirstCheckRoutine
+	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
+		CommonRoutine("SA3") ;2nd donateCC after BB routine
 		checkSwitchAcc() ;switch to next account
 	EndIf
-EndFunc
+EndFunc  ;===> FirstCheckRoutine
 
 Func CommonRoutine($RoutineType = Default)
 	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
-	Switch $RoutineType
-		Case "FirstCheckRoutine"
-			;Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements', 'CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot', 'PetHouse']
-			;_ArrayShuffle($aRndFuncList)
-			;For $Index In $aRndFuncList
-			;	If Not $g_bRunState Then Return
-			;	_RunFunction($Index)
-			;	If _Sleep(100) Then Return
-			;	If $g_bRestart Then Return
-			;Next
 
+	Switch $RoutineType
+		Case "FCR0" ; FIrstCheckRoutine
+			Local $aRndFuncList = ['Collect', 'FstReq', 'ReplayShare', 'UpgradeHeroes', 'CheckLeague', _
+			'CheckTombs', 'CleanYard', 'Laboratory', 'DailyChallenge', 'CollectAchievements', 'PetHouse', _
+			'CollectAchievements', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
+			_ArrayShuffle($aRndFuncList)
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(200) Then Return
+				If $g_bRestart Then Return
+			Next
+			;check storages if 70% full then do these upgrade routines, great time saver and more human-like
 			If _ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
-				Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall' , 'PetHouse'] ;, 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
+			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'Laboratory', 'UpgradeHeroes', 'PetHouse']
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
 					_RunFunction($Index)
@@ -1686,17 +1566,29 @@ Func CommonRoutine($RoutineType = Default)
 					If $g_bRestart Then Return
 				Next
 			EndIf
-			
-		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'CollectCCGold', 'AutoUpgradeCC'] ;, 'BuilderBase']
+
+		Case "QKR1" ; QuickRoutine before 2nd attack
+			Local $aRndFuncList = ['Collect', 'FstReq', 'ReplayShare', 'CheckLeague', 'CollectAchievements', 'CollectCCGold']
+			_ArrayShuffle($aRndFuncList)
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(500) Then Return
+				If $g_bRestart Then Return
+			Next
+
+		Case "NCGE2" ; NoClanGamesEvent
+			Local $aRndFuncList = ['Collect', 'PetHouse', 'CollectCCGold', 'Laboratory', 'DonateCC,Train', _
+			'CollectCCGold', 'AutoUpgradeCC', 'BBRTN0']
+			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then Return
 			Next
-			
-		Case "Switch"
+
+		Case "SA3" ; switch
 			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
@@ -1718,13 +1610,13 @@ Func BuilderBase()
 		BuilderBaseReport()
 		CollectBuilderBase()
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		
+
 		If $g_bElixirStorageFullBB Then StartClockTowerBoost()
-		
+
 		CleanBBYard()
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-		
+
 		If isGoldFullBB() Or isElixirFullBB() Then
 			AutoUpgradeBB()
 			$g_iBBAttacked = False
@@ -1732,41 +1624,41 @@ Func BuilderBase()
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			$g_iBBAttacked = False
 		EndIf
-		
+
 		If isElixirFullBB() Then
 			StarLaboratory()
 			$g_iBBAttacked = False
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
-		
-		If Not BBDropTrophy() Then 		
+
+		If Not BBDropTrophy() Then
 			If _Sleep($DELAYRUNBOT1) Then Return
 			DoAttackBB()
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 			If _Sleep($DELAYRUNBOT1) Then Return
 		EndIf
-		
+
 		If $g_iBBAttacked Then
 			AutoUpgradeBB()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
-			
+
 			StarLaboratory()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		EndIf
-		ZoomOut(True) ;directly zoom 
+		ZoomOut(True) ;directly zoom
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
 		; switch back to normal village
-		ZoomOut(True) ;directly zoom 
+		ZoomOut(True) ;directly zoom
 		$g_bStayOnBuilderBase = False
 		SwitchBetweenBases("Main")
 	EndIf
-	
+
 	If Not $g_bStayOnBuilderBase And IsOnBuilderBase() Then SwitchBetweenBases("Main")
 EndFunc
 
@@ -1815,6 +1707,50 @@ Func GotoBBTodoCG()
 	EndIf
 EndFunc
 
+Func BBRTN0() ; BB routine for cg - do upgrades - lab - ClockTower boost etc. before switch acc
+
+	SetLog("Do BB routine before account switch...", $COLOR_INFO)
+	If SwitchBetweenBases("BB") Then
+		$g_bStayOnBuilderBase = True
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		ZoomOut()
+		BuilderBaseReport()
+		CollectBuilderBase()
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+
+		If $g_bElixirStorageFullBB Then StartClockTowerBoost()
+
+		CleanBBYard()
+		If _Sleep($DELAYRUNBOT1) Then Return
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+
+		If isGoldFullBB() Or isElixirFullBB() Then
+			AutoUpgradeBB()
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
+
+		If isElixirFullBB() Then
+			StarLaboratory()
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
+
+		ZoomOut(True) ;directly zoom
+		StartClockTowerBoost()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		BuilderBaseReport(False, True, False)
+		If _Sleep($DELAYRUNBOT3) Then Return
+		; switch back to normal village
+		ZoomOut(True) ;directly zoom
+		$g_bStayOnBuilderBase = False
+		SwitchBetweenBases("Main")
+		$g_bStayOnBuilderBase = False
+	EndIf
+
+	If Not $g_bStayOnBuilderBase And IsOnBuilderBase() Then SwitchBetweenBases("Main")
+EndFunc
+
 Func RemControl()
 	For $i = $g_hChkCustomTrainOrderEnable To $g_ahImgTroopOrderSet
 		GUICtrlDelete($i)
@@ -1822,34 +1758,34 @@ Func RemControl()
 	For $i = $g_hChkCustomBrewOrderEnable To $g_ahImgSpellsOrderSet
 		GUICtrlDelete($i)
 	Next
-	For $i = $g_ahChkArmy[0] To $g_ahChkArmy[UBound($g_ahChkArmy) - 1] 
+	For $i = $g_ahChkArmy[0] To $g_ahChkArmy[UBound($g_ahChkArmy) - 1]
 		GUICtrlDelete($i)
 	Next
-	For $i = $g_ahChkUseInGameArmy[0] To $g_ahChkUseInGameArmy[UBound($g_ahChkUseInGameArmy) - 1] 
+	For $i = $g_ahChkUseInGameArmy[0] To $g_ahChkUseInGameArmy[UBound($g_ahChkUseInGameArmy) - 1]
 		GUICtrlDelete($i)
 	Next
-	For $i = $g_ahBtnEditArmy[0] To $g_ahBtnEditArmy[UBound($g_ahBtnEditArmy) - 1] 
+	For $i = $g_ahBtnEditArmy[0] To $g_ahBtnEditArmy[UBound($g_ahBtnEditArmy) - 1]
 		GUICtrlDelete($i)
 	Next
-	For $i = $g_ahLblEditArmy[0] To $g_ahLblEditArmy[UBound($g_ahLblEditArmy) - 1] 
+	For $i = $g_ahLblEditArmy[0] To $g_ahLblEditArmy[UBound($g_ahLblEditArmy) - 1]
 		GUICtrlDelete($i)
 	Next
-	For $i = $g_ahLblTotalQTroop[0] To $g_ahLblTotalQTroop[UBound($g_ahLblTotalQTroop) - 1] 
+	For $i = $g_ahLblTotalQTroop[0] To $g_ahLblTotalQTroop[UBound($g_ahLblTotalQTroop) - 1]
 		GUICtrlDelete($i)
 	Next
-	For $i = $g_ahPicTotalQTroop[0] To $g_ahPicTotalQTroop[UBound($g_ahPicTotalQTroop) - 1] 
+	For $i = $g_ahPicTotalQTroop[0] To $g_ahPicTotalQTroop[UBound($g_ahPicTotalQTroop) - 1]
 		GUICtrlDelete($i)
 	Next
-	For $i = $g_ahLblTotalQSpell[0] To $g_ahLblTotalQSpell[UBound($g_ahLblTotalQSpell) - 1] 
+	For $i = $g_ahLblTotalQSpell[0] To $g_ahLblTotalQSpell[UBound($g_ahLblTotalQSpell) - 1]
 		GUICtrlDelete($i)
 	Next
-	For $i = $g_ahPicTotalQSpell[0] To $g_ahPicTotalQSpell[UBound($g_ahPicTotalQSpell) - 1] 
+	For $i = $g_ahPicTotalQSpell[0] To $g_ahPicTotalQSpell[UBound($g_ahPicTotalQSpell) - 1]
 		GUICtrlDelete($i)
 	Next
-	For $i = $g_ahLblQuickTrainNote[0] To $g_ahLblQuickTrainNote[UBound($g_ahLblQuickTrainNote) - 1] 
+	For $i = $g_ahLblQuickTrainNote[0] To $g_ahLblQuickTrainNote[UBound($g_ahLblQuickTrainNote) - 1]
 		GUICtrlDelete($i)
 	Next
-	For $i = $g_ahLblUseInGameArmyNote[0] To $g_ahLblUseInGameArmyNote[UBound($g_ahLblUseInGameArmyNote) - 1] 
+	For $i = $g_ahLblUseInGameArmyNote[0] To $g_ahLblUseInGameArmyNote[UBound($g_ahLblUseInGameArmyNote) - 1]
 		GUICtrlDelete($i)
 	Next
 	For $i = $g_hChkCustomDropOrderEnable To $g_hBtnRemoveDropOrder
