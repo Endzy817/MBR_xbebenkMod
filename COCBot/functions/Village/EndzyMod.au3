@@ -152,6 +152,173 @@ Func RoutineBeforeSwitch()
 
 EndFunc  ;==>RoutineBeforeSwitch
 #ce
+Func EU0() ; Early Upgrades
+	If $g_iFreeBuilderCount > 0 And (_ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1)) Then
+		If _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
+			Laboratory()
+			VillageReport(True, True)
+		EndIf
+		Setlog("Your Account have FREE BUILDER", $COLOR_INFO)
+		If Not $g_bRunState Then Return
+		CheckTombs()
+		CleanYard()
+		_Sleep(8000) ;add wait after clean yard
+		If Not $g_bRunState Then Return
+		If $g_bUpgradeWallEarly Then
+			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
+			_RunFunction('UpgradeWall') ;UpgradeWall()
+		EndIf
+		If Not $g_bRunState Then Return
+		If $g_bAutoUpgradeEarly Then
+			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
+			checkArmyCamp(True, True) ;need to check reserved builder for heroes
+			AutoUpgrade()
+		EndIf
+		VillageReport()
+		ZoomOut()
+		UpgradeHeroes() ;Early Hero Upgrade
+		ZoomOut()
+	Else
+		SetLog("Your acc doesn't have a builder available or storages are not 70% full", $COLOR_INFO)
+		etLog("Skipping Early Upgrades", $COLOR_INFO)
+	EndIf
+	;UpgradeHeroes() ;Early Hero Upgrade
+EndFunc  ;===>EU0
+
+Func DL0() ;Donate Loop
+	If $g_abDonateOnly[$g_iCurAccount] Then
+		SetLog("-- DONATE ONLY ENABLED --")
+		ZoomOut()
+		checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheck")
+		VillageReport(True, True)
+		Local $loopcount = 1
+		While 1
+			If Not $g_bRunState Then Return
+			$loopcount += 1
+			If _Sleep(1000) Then Return
+			Setlog("Loop:[" & $loopcount & "] -- DONATE MODE --", $COLOR_SUCCESS)
+
+			If Not $g_bRunState Then Return
+			If _Sleep(1000) Then Return
+			VillageReport()
+			If _Sleep(1000) Then Return
+			If Not $g_bRunState Then Return
+
+			Local $aRndFuncList = ['Collect', 'FstReq', 'CleanYard']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(1000) Then Return
+				If $g_bRestart Then Return
+			Next
+
+			If Not $g_bRunState Then Return
+			If _Sleep(3000) Then Return
+			_RunFunction('DonateCC,Train')
+			If Not $g_bRunState Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
+
+			If $loopcount > 1 Then
+				Local $aRndFuncList = ['AutoUpgradeCC', 'ForgeClanCapitalGold', 'CollectCCGold']
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If _Sleep(5000) Then Return
+					If $g_bRestart Then Return
+				Next
+			EndIf
+
+			If Not $g_bRunState Then Return
+
+			If $loopcount > 2 Then
+				Local $aRndFuncList = ['CleanYard', 'BuilderBase', 'AutoUpgradeCC', 'ForgeClanCapitalGold', 'CollectCCGold']
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If _Sleep(5000) Then Return
+					If $g_bRestart Then Return
+				Next
+				If _Sleep(2000) Then Return
+				checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
+				If _Sleep(2000) Then Return
+			EndIf
+
+			If Not $g_bRunState Then Return
+
+			If $loopcount > 3 Then
+				SetLog("Looped 3 times, exiting donate loop now!", $COLOR_INFO)
+				If Not $g_bRunState Then Return
+				If _Sleep(2000) Then Return
+				ExitLoop
+			EndIf
+
+			If Not $g_bRunState Then Return
+		WEnd
+		If Not $g_bRunState Then Return
+		SetLog("Attack one time before switching account", $COLOR_INFO)
+		_RunFunction('DonateModeAtk')
+		If Not $g_bRunState Then Return
+		Laboratory()
+		If Not $g_bRunState Then Return
+		checkSwitchAcc() ;switch to next account
+	EndIf
+EndFunc  ;===>DL0()
+
+Func DMA0() ; DonateModeAtk
+	If Not $g_bRunState Then Return
+	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
+		; VERIFY THE TROOPS AND ATTACK IF IS FULL
+		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
+		SetLog("-- DONATE MODE --", $COLOR_DEBUG)
+		If Not $g_bRunState Then Return
+		RequestCC() ; only type CC text req here
+		TrainSystem()
+		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
+		If $g_bIsFullArmywithHeroesAndSpells Then
+			;Idle() ; if army is not ready amd close while training enabled
+			; Now the bot can attack
+			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
+				Setlog("Before any other routine let's attack!", $COLOR_INFO)
+				Local $loopcount = 1
+				While True
+					$g_bRestart = False
+					If Not $g_bRunState Then Return
+					If AttackMain($g_bSkipDT) Then
+						Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
+						If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut()
+						ExitLoop
+					Else
+						If $g_bForceSwitch Then ExitLoop ;exit here
+						$loopcount += 1
+						If $loopcount > 5 Then
+							Setlog("1st Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
+							ExitLoop
+						Else
+							Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
+						EndIf
+						If Not $g_bRunState Then Return
+					EndIf
+				Wend
+				If $g_bIsCGEventRunning And $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+					SetLog("Because running CG Event is BB Challenges", $COLOR_INFO)
+					GotoBBTodoCG() ;force go to bb todo event
+				EndIf
+				If $g_bOutOfGold Then
+					SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
+					$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
+					Return
+				EndIf
+				If _Sleep($DELAYRUNBOT1) Then Return
+			EndIf
+		EndIf
+	EndIf
+    If Not $g_bRunState Then Return
+	TrainSystem()
+	_RunFunction('DonateCC,Train')
+	If Not $g_bRunState Then Return
+EndFunc  ;===> DMA0
+
 #EndRegion - For MainLoop - Endzy
 
 Func CheckLeague() ;little humanization
