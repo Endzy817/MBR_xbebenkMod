@@ -180,7 +180,7 @@ Func EU0() ; Early Upgrades
 		ZoomOut()
 	Else
 		SetLog("Your acc doesn't have a builder available or storages are not 70% full", $COLOR_INFO)
-		etLog("Skipping Early Upgrades", $COLOR_INFO)
+		SetLog("Skipping Early Upgrades", $COLOR_INFO)
 	EndIf
 	;UpgradeHeroes() ;Early Hero Upgrade
 EndFunc  ;===>EU0
