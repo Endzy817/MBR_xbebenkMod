@@ -100,6 +100,7 @@ Func _makerequest($x, $y, $bTest, $bNRtTxt)
 	Next
 
 	If $RequestWindowOpen And $bNRtTxt = 1 Then ; Not type req text
+		If _Sleep(2000) Then Return
 		; Click Req Button no need image search and waste time, just click lol
 		Click(Random(460,580,1),Random(440,480,1)) ; Click(520,460)
 		$g_bCanRequestCC = False
