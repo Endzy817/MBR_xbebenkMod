@@ -1543,34 +1543,53 @@ EndFunc  ;===> FirstCheckRoutine
 
 Func CommonRoutine($RoutineType = Default)
 	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
+
 	Switch $RoutineType
-		Case "FirstCheckRoutine"
-			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', 'Laboratory', 'CollectFreeMagicItems', 'SellHeroPot']
+		Case "FCR0" ; FIrstCheckRoutine
+			Local $aRndFuncList = ['Collect', 'FstReq', 'ReplayShare', 'UpgradeHeroes', 'CheckLeague', _
+			'CheckTombs', 'CleanYard', 'Laboratory', 'DailyChallenge', 'CollectAchievements', 'PetHouse', _
+			'CollectAchievements', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
+			_ArrayShuffle($aRndFuncList)
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(200) Then Return
+				If $g_bRestart Then Return
+			Next
+			;check storages if 70% full then do these upgrade routines, great time saver and more human-like
+			If _ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
+			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'Laboratory', 'UpgradeHeroes', 'PetHouse']
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If _Sleep(100) Then Return
+					If $g_bRestart Then Return
+				Next
+			EndIf
+
+		Case "QKR1" ; QuickRoutine before 2nd attack
+			Local $aRndFuncList = ['Collect', 'FstReq', 'ReplayShare', 'CheckLeague', 'CollectAchievements', 'CollectCCGold']
+			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
 				If _Sleep(500) Then Return
 				If $g_bRestart Then Return
 			Next
-			Local $aRndFuncList = ['PetHouse', 'ForgeClanCapitalGold', 'CollectCCGold', 'AutoUpgradeCC']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(500) Then Return
-				If $g_bRestart Then Return
-			Next
-			
-		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase', 'CollectCCGold', 'AutoUpgradeCC']
+
+		Case "NCGE2" ; NoClanGamesEvent
+			Local $aRndFuncList = ['Collect', 'PetHouse', 'CollectCCGold', 'Laboratory', 'DonateCC,Train', _
+			'CollectCCGold', 'AutoUpgradeCC', 'BBRTN0']
+			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
 				If _Sleep(50) Then Return
 				If $g_bRestart Then Return
 			Next
-			
-		Case "Switch"
-			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train', 'UpgradeBuilding', 'UpgradeWall']
+
+		Case "SA3" ; switch
+			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
