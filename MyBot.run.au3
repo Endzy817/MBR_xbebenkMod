@@ -1344,6 +1344,7 @@ Func FirstCheck()
 		If Not $g_bSkipFirstCheckRoutine Then FirstCheckRoutine()
 		If Not $g_bSkipBB Then _RunFunction('BuilderBase')
 		If Not $g_bSkipTrain Then TrainSystem()
+		_RunFunction('DonateCC,Train')
 		checkSwitchAcc()
 	Else
 		FirstCheckRoutine()
@@ -1413,7 +1414,6 @@ Func FirstCheckRoutine()
 		;	PrepareDonateCC()
 		;	DonateCC()
 		;EndIf
-		RequestCC() ; only type CC text req here
 		TrainSystem()
 		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 		If $g_bIsFullArmywithHeroesAndSpells Then
@@ -1557,14 +1557,16 @@ Func CommonRoutine($RoutineType = Default)
 				If $g_bRestart Then Return
 			Next
 			;check storages if 70% full then do these upgrade routines, great time saver and more human-like
-			If _ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
-			Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall', 'Laboratory', 'UpgradeHeroes', 'PetHouse']
-				For $Index In $aRndFuncList
-					If Not $g_bRunState Then Return
-					_RunFunction($Index)
-					If _Sleep(100) Then Return
-					If $g_bRestart Then Return
-				Next
+			If $g_iFreeBuilderCount > 1 Then ; if 2 builder available and storages 70% full then do upgrades
+				If _ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
+					Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
+					For $Index In $aRndFuncList
+						If Not $g_bRunState Then Return
+						_RunFunction($Index)
+						If _Sleep(100) Then Return
+						If $g_bRestart Then Return
+					Next
+				EndIf
 			EndIf
 
 		Case "QKR1" ; QuickRoutine before 2nd attack

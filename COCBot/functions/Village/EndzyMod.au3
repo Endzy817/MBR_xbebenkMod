@@ -105,54 +105,8 @@ Func TestAttack() ;Endzy
 EndFunc ;==>TestAttack
 
 #Region - For MainLoop - Endzy
-#cs
-Func OptimizedUpgrade()
-
-	If $g_iFreeBuilderCount > 0 And _ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
-		SetLog("Gold/Elixir storages are 70% full.", $COLOR_SUCCESS)
-		SetLog ("Starting AutoUpgrade & UpgradeWall now...", $COLOR_SUCCESS)
-		Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
-		For $Index In $aRndFuncList
-			If Not $g_bRunState Then Return
-			_RunFunction($Index)
-			If _Sleep(100) Then Return
-			If $g_bRestart Then Return
-		Next
-		;SetLog("Gold/Elixir storages are 70% full.", $COLOR_SUCCESS)
-		;SetLog ("Starting AutoUpgrade & UpgradeWall now...", $COLOR_SUCCESS)
-		;AutoUpgrade()
-		;_Sleep($DELAYRUNBOT3)
-		;If Not $g_bRunState Then Return
-		;_RunFunction('UpgradeWall')
-	Else
-		SetLog("Gold/Elixir is not 70% full, skipping AutoUpgrade & UpgradeWall.", $COLOR_INFO)
-	EndIf
-
-EndFunc   ;==>OptimizedUpgrade
-
-Func RoutineBeforeSwitch()
-
-	If $g_iFreeBuilderCount > 0 Then
-		Setlog("Your account is on Halt Attack & have FREE BUILDER/S & full Storages!", $COLOR_INFO)
-		If Not $g_bRunState Then Return
-		_RunFunction('CleanYard')
-		_Sleep(8000) ;add wait after clean yard
-		If Not $g_bRunState Then Return
-
-		SetLog("Doing AutoUpgrade now!", $COLOR_INFO)
-		AutoUpgrade()
-		_Sleep(1000)
-		VillageReport()
-		ZoomOut()
-		If Not $g_bRunState Then Return
-
-		SetLog("Doing Upgrade Wall now!", $COLOR_INFO)
-		UpgradeWall()
-	EndIf
-
-EndFunc  ;==>RoutineBeforeSwitch
-#ce
 Func EU0() ; Early Upgrades
+	RequestCC() ; only type CC text req here
 	If $g_iFreeBuilderCount > 0 And (_ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1)) Then
 		If _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
 			Laboratory()
@@ -345,6 +299,8 @@ Func CheckLeague() ;little humanization
 				If _Sleep(500) Then Return
 				ClickAway()
 			EndIf
+		Else
+			SetLog("Not in a new league, skipping", $COLOR_INFO)
 		EndIf
 	EndIf
 

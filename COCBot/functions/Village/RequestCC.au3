@@ -46,8 +46,6 @@ Func RequestCC($bClickPAtEnd = True, $sText = "", $bTest = False, $bNRtTxt = Fal
 	If Not IsArray($aRequestButton) Then
 		SetDebugLog("Error in RequestCC(): $aRequestButton is no Array")
 		If $g_bDebugImageSave Then SaveDebugImage("RequestButtonStateError")
-		ClickAway()
-		ClickAway()
 		Return
 	EndIf
 
@@ -93,6 +91,7 @@ Func _makerequest($x, $y, $bTest, $bNRtTxt)
 		SetDebugLog("Wait for Send Request Window #" & $i, $COLOR_ACTION)
 		If QuickMis("BC1", $g_sImgSendRequestButton, 440, 410, 600, 550) Then
 			SetDebugLog("_makerequest: Request window open", $COLOR_ACTION)
+			If _Sleep(1000) Then Return
 			$RequestWindowOpen = True
 			ExitLoop
 		EndIf
@@ -100,46 +99,55 @@ Func _makerequest($x, $y, $bTest, $bNRtTxt)
 	Next
 
 	If $RequestWindowOpen And $bNRtTxt = 1 Then ; Not type req text
-		If _Sleep(2000) Then Return
-		; Click Req Button no need image search and waste time, just click lol
-		Click(Random(460,580,1),Random(440,480,1)) ; Click(520,460)
-		$g_bCanRequestCC = False
-	Else
-		If $RequestWindowOpen Then
-			If $g_sRequestTroopsText <> "" Then
-				If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
-				Click($g_iQuickMISX - 50, $g_iQuickMISY - 60) ;click text box
-				If _Sleep(1000) Then Return
-				If SendText($g_sRequestTroopsText) = 0 Then ;type the request
-					SetLog(" Request text entry failed, try again", $COLOR_ERROR)
-					ClickAway()
-				EndIf
-			EndIf
-			If _Sleep(2000) Then Return ; wait time for text request to complete
-			Click($g_iQuickMISX + 95, $g_iQuickMISY)
-			If _Sleep(1000) Then Return ; wait time after clicking request window border
-			; Click Req Button no need image search and waste time, just click lol
-			Click(Random(460,580,1),Random(440,480,1)) ; Click(520,460)
-			$g_bCanRequestCC = False
-	#cs		For $i = 1 To 5
-				SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
-				If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
-					SetDebugLog("Make final request", $COLOR_ACTION)
-					If Not $bTest Then
-						Click($g_iQuickMISX, $g_iQuickMISY)
-					Else
-						SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
-					EndIf
+		For $i = 1 To 5
+			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
+			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
+				SetDebugLog("Make final request", $COLOR_ACTION)
+				If Not $bTest Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
 				Else
-					SetDebugLog("Send Button Is gone!!!", $COLOR_SUCCESS)
-					ExitLoop
+					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				EndIf
-				_Sleep(1000)
-			Next
-			$g_bCanRequestCC = False
-		Else
-	#ce		SetDebugLog("Send request button not found", $COLOR_DEBUG)
+			Else
+				SetDebugLog("Send Button Is gone!!!", $COLOR_DEBUG)
+				ExitLoop
+			EndIf
+			_Sleep(1000)
+		Next
+		$g_bCanRequestCC = False
+		SetLog("Fast Request - Request sent succesfully", $COLOR_SUCCESS)
+	ElseIf $RequestWindowOpen And Not $bNRtTxt = 1 Then
+		If $g_sRequestTroopsText <> "" Then
+			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
+			Click($g_iQuickMISX - 50, $g_iQuickMISY - 60) ;click text box
+			If _Sleep(1000) Then Return
+			If SendText($g_sRequestTroopsText) = 0 Then ;type the request
+				SetLog(" Request text entry failed, try again", $COLOR_ERROR)
+				ClickAway()
+			EndIf
 		EndIf
+		If _Sleep(2000) Then Return ; wait time for text request to complete
+		Click($g_iQuickMISX + 95, $g_iQuickMISY)
+		If _Sleep(1000) Then Return ; wait time after clicking request window border
+		For $i = 1 To 5
+			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
+			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
+				SetDebugLog("Make final request", $COLOR_ACTION)
+				If Not $bTest Then
+					Click($g_iQuickMISX, $g_iQuickMISY)
+				Else
+					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
+				EndIf
+			Else
+				SetDebugLog("Send Button Is gone!!!", $COLOR_DEBUG)
+				ExitLoop
+			EndIf
+			_Sleep(1000)
+		Next
+		$g_bCanRequestCC = False
+		SetLog("Default - Request sent succesfully", $COLOR_SUCCESS)
+	Else
+		SetDebugLog("Send request button not found", $COLOR_DEBUG)
 	EndIf
 	If _Sleep(1000) Then Return
 
