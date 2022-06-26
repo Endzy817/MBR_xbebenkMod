@@ -382,7 +382,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "minTreasurygold", $g_iTxtTreasuryGold)
 	_Ini_Add("other", "minTreasuryelixir", $g_iTxtTreasuryElixir)
 	_Ini_Add("other", "minTreasurydark", $g_iTxtTreasuryDark)
-
+	_Ini_Add("search", "DBNoLeague", $g_bChkNoLeague[$DB] ? 1 : 0)	; Check No League for Dead Base
 	_Ini_Add("other", "ChkCollectBuildersBase", $g_bChkCollectBuilderBase ? 1 : 0)
 	_Ini_Add("other", "ChkCleanBBYard", $g_bChkCleanBBYard ? 1 : 0)
 	_Ini_Add("other", "ChkStartClockTowerBoost", $g_bChkStartClockTowerBoost ? 1 : 0)

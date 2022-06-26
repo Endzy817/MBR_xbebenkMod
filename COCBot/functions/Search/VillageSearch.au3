@@ -225,7 +225,22 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 		If Not $g_bRunState Then Return
 		; check deadbase
 		Local $checkDeadBase = $match[$DB] Or $match[$LB]
-		If $checkDeadBase Then
+		;If $checkDeadBase Then
+		;	$dbBase = checkDeadBase()
+		;EndIf
+		; Check No League for Dead Base - Endzy
+		If $g_bChkNoLeague[$DB] And $match[$DB] = True Then
+			If SearchNoLeague() Then
+				SetLog("Dead Base is in No League, match found.", $COLOR_SUCCESS)
+				$dbBase = True
+			Else
+				; If you play against, this is disabled.
+				If ($g_iSearchCount = 10) Then
+					SetLog("Disabling no league, it seems that there are no true dead bases in your league !", $COLOR_ACTION)
+				EndIf
+				If ($g_iSearchCount > 10) Then $dbBase = checkDeadBase()
+			EndIf
+		ElseIf $checkDeadBase = True Then
 			$dbBase = checkDeadBase()
 		EndIf
 

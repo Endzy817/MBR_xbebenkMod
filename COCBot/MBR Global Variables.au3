@@ -1939,8 +1939,8 @@ Global Enum $ePetLassi, $ePetEletroOwl, $ePetMightyYak, $ePetUnicorn, $ePetCount
 Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "Unicorn"]
 Global Const $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn"]
 Global Const $g_ePetLevels=10
-
-
+; Check No League for Dead Base - Endzy
+Global $g_bChkNoLeague[$g_iModeCount] = [False, False, False]
 Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _  ; LASSI
 		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl

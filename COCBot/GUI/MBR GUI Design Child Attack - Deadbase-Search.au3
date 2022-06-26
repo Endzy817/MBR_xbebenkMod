@@ -36,6 +36,9 @@ Global $g_hChkDBMeetTH = 0, $g_hCmbDBTH = 0, $g_hChkDBMeetTHO = 0, $g_hChkDBMeet
 Global $g_hGrpDBFilter = 0, $g_hPicDBMinGold = 0, $g_hPicDBMinElixir = 0, $g_hPicDBMinGPEGold = 0, $g_hPicDBMinDarkElixir = 0, $g_hPicDBMinTrophies = 0
 Global $g_ahPicDBMaxTH[15]
 
+; Check No League for Dead Base - Endzy
+Global $g_hChkDBNoLeague = 0
+
 Func CreateAttackSearchDeadBaseSearch()
 	Local $sTxtLightningSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortLightningSpells", -1)
 	Local $sTxtHealSpells = GetTranslatedFileIni("MBR Global GUI Design Names Spells", "TxtShortHealSpells", -1)
@@ -388,6 +391,12 @@ Func CreateAttackSearchDeadBaseSearch()
 	$x = $xStartColumn
 		$g_ahChkMeetOne[$DB] = GUICtrlCreateCheckbox(GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetOne", "Meet One Then Attack"), $x, $y, -1, -1)
 			_GUICtrlSetTip(-1, GetTranslatedFileIni("MBR GUI Design Child Attack - Search", "ChkMeetOne_Info_01", "Just meet only ONE of the above conditions, then Attack."))
+	#Region - Check No League for Dead Base - Endzy
+	$y += 25
+		$g_hChkDBNoLeague = GUICtrlCreateCheckbox("No League", $x, $y, -1, -1)
+			_GUICtrlSetTip(-1, "Search for a Dead bases that has no league.")
+			GUICtrlSetOnEvent(-1, "chkDBNoLeague")
+	#EndRegion - Check No League for Dead Base - Endzy
 	GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 EndFunc   ;==>CreateAttackSearchDeadBaseSearch
