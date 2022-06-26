@@ -98,7 +98,7 @@ Func CheckSwitchAcc()
 	SetLog("Start Switch Account!", $COLOR_INFO)
 	; Force switch if no clangames event active
 	If $g_bForceSwitchifNoCGEvent Then $bForceSwitch = True
-	
+
 	; Force Switch when PBT detected
 	If $g_abPBActive[$g_iCurAccount] Then $bForceSwitch = True
 
@@ -212,11 +212,15 @@ Func CheckSwitchAcc()
 			If $g_bChkFastSwitchAcc Then
 				If $g_bRequestTroopsEnable Then
 					If _Sleep(1000) Then Return
+					SetLog("Try Purging an event before switching account", $COLOR_DEBUG)
+					CGP0() ; Purge an event before switching to the next account
 					SetLog("Requesting CC troops before switching account", $COLOR_DEBUG)
 					_RunFunction('FstReq')
 				EndIf
 			Else
 				If $g_bRequestTroopsEnable Then
+					SetLog("Try Purging an event before switching account", $COLOR_DEBUG)
+					CGP0() ; Purge an event before switching to the next account
 					SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
 					RequestCC()
 					PrepareDonateCC()
