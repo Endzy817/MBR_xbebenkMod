@@ -13,7 +13,7 @@
 ; Example .......: No
 ; ===============================================================================================================================
 
-#cs
+
 #Region - Search NoLeague for DeadBase - Endzy
 Func TestCheckDeadBase()
 	Local $dbBase
@@ -51,7 +51,7 @@ Func SearchNoLeague($bCheckOneTime = False)
 	Return $bReturn
 EndFunc   ;==>SearchNoLeague
 #EndRegion - Search NoLeague for DeadBase - Endzy
-#ce
+
 Func TestAttack() ;Endzy
 	If _Sleep(300) Then Return
 	PureClick(20,350)
@@ -319,6 +319,8 @@ Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1,
 	GUICtrlSetBkColor($hReturn, 0xD1DFE7)
 	Return $hReturn
 EndFunc   ;==>_GUICtrlCreateInput
+
+#Region - GUI Control
 #cs
 Func chkUseSmartFarmAndRandomQuant()
 	If $g_iGuiMode <> 1 Then Return
@@ -330,3 +332,8 @@ Func chkUseSmartFarmAndRandomQuant()
 	EndIf
 EndFunc   ;==>chkUseSmartFarmAndRandomQuant
 #ce
+
+Func chkDBNoLeague()
+	$g_bChkNoLeague[$DB] = GUICtrlRead($g_hChkDBNoLeague) = $GUI_CHECKED
+EndFunc   ;==>chkDBNoLeague
+#EndRegion - GUI Control

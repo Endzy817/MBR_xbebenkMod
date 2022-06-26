@@ -235,10 +235,10 @@ Func _VillageSearch() ;Control for searching a village that meets conditions
 				$dbBase = True
 			Else
 				; If you play against, this is disabled.
-				If ($g_iSearchCount = 10) Then
+				If ($g_iSearchCount = 50) Then
 					SetLog("Disabling no league, it seems that there are no true dead bases in your league !", $COLOR_ACTION)
 				EndIf
-				If ($g_iSearchCount > 10) Then $dbBase = checkDeadBase()
+				If ($g_iSearchCount > 50) Then $dbBase = checkDeadBase()
 			EndIf
 		ElseIf $checkDeadBase = True Then
 			$dbBase = checkDeadBase()
