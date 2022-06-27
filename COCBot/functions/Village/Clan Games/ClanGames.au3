@@ -12,6 +12,42 @@
 ; Link ..........: https://www.mybot.run
 ; Example .......: ---
 ;================================================================================================================================
+Func CGP0($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClanGames, $OnlyPurge = False) ; ClanGamesPurge - purge only func, purge before switch acc
+	$g_bIsBBevent = False ;just to be sure, reset to false
+	$g_bIsCGEventRunning = False ;just to be sure, reset to false
+	$g_bForceSwitchifNoCGEvent = False ;just to be sure, reset to false
+	$g_bIsCGPointAlmostMax = False ;just to be sure, reset to false
+	$g_bisCGPointMaxed = False ;just to be sure, reset to false
+	Local $PurgeDayMinute = ($g_iCmbClanGamesPurgeDay + 1) * 1440
+
+	; Check If this Feature is Enable on GI.
+	If Not $g_bChkClanGamesEnabled Then Return
+	If $g_iTownHallLevel <= 5 Then
+		SetLog("TownHall Level : " & $g_iTownHallLevel & ", Skip Clan Games", $COLOR_INFO)
+		Return
+	Endif
+
+	Local $sINIPath = StringReplace($g_sProfileConfigPath, "config.ini", "ClanGames_config.ini")
+	If Not FileExists($sINIPath) Then ClanGamesChallenges("", True, $sINIPath, $g_bChkClanGamesDebug)
+
+	If CloseClangamesWindow() Then _Sleep(1000)
+	If CheckMainScreen(False, $g_bStayOnBuilderBase, "ClanGames") Then ZoomOut()
+	If _Sleep(500) Then Return
+	SetLog("Entering Clan Games", $COLOR_INFO)
+	If Not $g_bRunState Then Return
+	; Enter on Clan Games window
+	If IsClanGamesWindow() Then
+		ForcePurgeEvent(False, True)
+		If _Sleep(1000) Then Return
+		CloseClangamesWindow()
+		If _Sleep(2000) Then Return
+	Else
+		CloseClangamesWindow()
+		If _Sleep(2000) Then Return
+	EndIf
+	Return True
+EndFunc  ;===> CGP0
+
 Func _ClanGames($test = False, $bSearchBBEventFirst = $g_bChkForceBBAttackOnClanGames, $OnlyPurge = False)
 	$g_bIsBBevent = False ;just to be sure, reset to false
 	$g_bIsCGEventRunning = False ;just to be sure, reset to false
