@@ -107,7 +107,8 @@ EndFunc ;==>TestAttack
 #Region - For MainLoop - Endzy
 Func EU0() ; Early Upgrades
 	RequestCC() ; only type CC text req here
-	If $g_iFreeBuilderCount > 0 And (_ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1)) Then
+	;If $g_iFreeBuilderCount > 0 And (_ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1)) Then
+	If $g_iFreeBuilderCount > 0 Then
 		If _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
 			Laboratory()
 			VillageReport(True, True)
@@ -118,11 +119,6 @@ Func EU0() ; Early Upgrades
 		CleanYard()
 		_Sleep(8000) ;add wait after clean yard
 		If Not $g_bRunState Then Return
-		If $g_bUpgradeWallEarly Then
-			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
-			_RunFunction('UpgradeWall') ;UpgradeWall()
-		EndIf
-		If Not $g_bRunState Then Return
 		If $g_bAutoUpgradeEarly Then
 			SetLog("Check Auto Upgrade Early", $COLOR_INFO)
 			checkArmyCamp(True, True) ;need to check reserved builder for heroes
@@ -130,10 +126,21 @@ Func EU0() ; Early Upgrades
 		EndIf
 		VillageReport()
 		ZoomOut()
+		_Sleep(2000)
+		If $g_bUpgradeWallEarly Then
+			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
+			_RunFunction('UpgradeWall') ;UpgradeWall()
+			ZoomOut()
+		EndIf
 		UpgradeHeroes() ;Early Hero Upgrade
 		ZoomOut()
+	ElseIf $g_iFreeBuilderCount = 0 Then
+		SetLog("Check Upgrade Wall Early", $COLOR_INFO)
+		_RunFunction('UpgradeWall') ;UpgradeWall()
+		ZoomOut()
 	Else
-		SetLog("Your acc doesn't have a builder available or storages are not 70% full", $COLOR_INFO)
+		;SetLog("Your acc doesn't have a builder available or storages are not 70% full", $COLOR_INFO)
+		SetLog("Your acc doesn't have a builder available", $COLOR_INFO)
 		SetLog("Skipping Early Upgrades", $COLOR_INFO)
 	EndIf
 	;UpgradeHeroes() ;Early Hero Upgrade

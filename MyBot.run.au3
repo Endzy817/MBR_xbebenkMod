@@ -1354,52 +1354,6 @@ Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
-	If $g_bChkCGBBAttackOnly Then
-		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
-		For $count = 1 to 11
-			If Not $g_bRunState Then Return
-			If $count > 10 Then
-				SetLog("Something maybe wrong, exiting to MainLoop!", $COLOR_INFO)
-				ExitLoop
-			EndIf
-
-			If _ClanGames(False, $g_bChkForceBBAttackOnClanGames) Then
-				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
-				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-					GotoBBTodoCG()
-				Else
-					ExitLoop ;should be will never get here, but
-				EndIf
-			Else
-				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
-				If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
-				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
-			EndIf
-			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
-		Next
-	Else
-		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
-			SetLog("Check ClanGames Early", $COLOR_INFO)
-			_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
-			If Not $g_bRunState Then Return
-			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-				GotoBBTodoCG()
-			EndIf
-		EndIf
-	EndIf
-
-	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 Then
-		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-		PrepareDonateCC()
-		DonateCC()
-		TrainSystem()
-		CommonRoutine("NoClanGamesEvent")
-		$g_bForceSwitchifNoCGEvent = True
-		checkSwitchAcc() ;switch to next account
-	EndIf
 
 ; ------------------ F I R S T  A T T A C K ------------------
 	If Not $g_bRunState Then Return
@@ -1457,17 +1411,6 @@ Func FirstCheckRoutine()
 	EndIf
     If Not $g_bRunState Then Return
 	TrainSystem()
-	If Not $g_bRunState Then Return
-
-	; forced switch after first attack if cg point is almost max
-	If ProfileSwitchAccountEnabled() And ($g_bIsCGPointAlmostMax Or $g_bIsCGPointMaxed) And $g_bChkForceSwitchifNoCGEvent Then
-		SetLog("ClanGames point almost max/maxed, Forced switch account!", $COLOR_SUCCESS)
-		TrainSystem()
-		_RunFunction('DonateCC,Train')
-		CommonRoutine("NoClanGamesEvent")
-		$g_bForceSwitchifNoCGEvent = True
-		checkSwitchAcc() ;switch to next account
-	EndIf
 
 	If Not $g_bRunState Then Return
 	CommonRoutine("QKR1")
@@ -1536,7 +1479,7 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	CommonRoutine("FCR0") ; FirstCheckRoutine
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
-		CommonRoutine("SA3") ;2nd donateCC after BB routine
+		CommonRoutine("SA3") ;routines before switch account
 		checkSwitchAcc() ;switch to next account
 	EndIf
 EndFunc  ;===> FirstCheckRoutine
@@ -1591,7 +1534,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "SA3" ; switch
-			Local $aRndFuncList = ['BuilderBase', 'DonateCC,Train']
+			Local $aRndFuncList = ['DonateCC,Train', 'BuilderBase', 'DonateCC,Train']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)

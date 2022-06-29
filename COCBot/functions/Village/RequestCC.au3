@@ -99,12 +99,14 @@ Func _makerequest($x, $y, $bTest, $bNRtTxt)
 	Next
 
 	If $RequestWindowOpen And $bNRtTxt = 1 Then ; Not type req text
+		If _Sleep(2000) Then Return
 		For $i = 1 To 5
 			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
 			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
 				SetDebugLog("Make final request", $COLOR_ACTION)
 				If Not $bTest Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
+					SetLog("Fast Request - Request sent succesfully", $COLOR_SUCCESS)
 				Else
 					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				EndIf
@@ -115,7 +117,6 @@ Func _makerequest($x, $y, $bTest, $bNRtTxt)
 			_Sleep(1000)
 		Next
 		$g_bCanRequestCC = False
-		SetLog("Fast Request - Request sent succesfully", $COLOR_SUCCESS)
 	ElseIf $RequestWindowOpen And Not $bNRtTxt = 1 Then
 		If $g_sRequestTroopsText <> "" Then
 			If Not $g_bChkBackgroundMode And Not $g_bNoFocusTampering Then ControlFocus($g_hAndroidWindow, "", "")
@@ -135,6 +136,7 @@ Func _makerequest($x, $y, $bTest, $bNRtTxt)
 				SetDebugLog("Make final request", $COLOR_ACTION)
 				If Not $bTest Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
+					SetLog("Default - Request sent succesfully", $COLOR_SUCCESS)
 				Else
 					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				EndIf
@@ -145,11 +147,12 @@ Func _makerequest($x, $y, $bTest, $bNRtTxt)
 			_Sleep(1000)
 		Next
 		$g_bCanRequestCC = False
-		SetLog("Default - Request sent succesfully", $COLOR_SUCCESS)
 	Else
 		SetDebugLog("Send request button not found", $COLOR_DEBUG)
 	EndIf
 	If _Sleep(1000) Then Return
+	ClickAway()
+	ClickAway()
 
 	;If _Sleep($DELAYMAKEREQUEST2) Then Return
 EndFunc   ;==>_makerequest
