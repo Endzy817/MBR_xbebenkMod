@@ -662,7 +662,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 		$iStartDelay = $iDelay * 1000
 		$g_iBotAction = $eBotStart
 		; check if android should be hidden
-		If Not $g_bBotLaunchOption_HideAndroid Then $g_bIsHidden = True
+		If $g_bBotLaunchOption_HideAndroid Then $g_bIsHidden = True
 		; check if bot should be minimized
 		If $g_bBotLaunchOption_MinimizeBot Then BotMinimizeRequest()
 	EndIf
