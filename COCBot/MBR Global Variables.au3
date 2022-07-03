@@ -1939,27 +1939,27 @@ Global Enum $ePetLassi, $ePetEletroOwl, $ePetMightyYak, $ePetUnicorn, $ePetCount
 Global Const $g_asPetNames[$ePetCount] = ["Lassi", "Eletro Owl", "Mighty Yak", "Unicorn"]
 Global Const $g_asPetShortNames[$ePetCount] = ["Lassi", "Owl", "Yak", "Unicorn"]
 Global Const $g_ePetLevels=10
-; Check No League for Dead Base - Endzy
-Global $g_bChkNoLeague[$g_iModeCount] = [False, False, False]
+
+
 Global Const $g_aiPetUpgradeCostPerLevel[$ePetCount][$g_ePetLevels] = [ _
 		[0, 115, 130, 145, 160, 175, 190, 205, 220, 235], _  ; LASSI
 		[0, 135, 150, 165, 180, 195, 210, 225, 240, 255], _  ; Electro Owl
 		[0, 165, 185, 205, 225, 245, 255, 265, 275, 285], _  ; Mighty Yak
 		[0, 210, 220, 230, 240, 250, 260, 270, 280, 290]]    ; Unicorn
-Global $g_iInpSmartZapTimes = 1 ;EndzyMod - SmartZap
-Global $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSetY = 0 ; Endzy
+
+
 ;Misc Mod
 Global $g_bSkipFirstCheckRoutine = False, $g_bSkipBB = False, $g_bSkipTrain = False 
 Global $g_bIgnoreIncorrectTroopCombo = False, $g_bIgnoreIncorrectSpellCombo = False
 Global $g_bTrainPreviousArmy = False, $g_bAlwaysDropHero = True, $g_bSkipSnowDetection = False
 Global $g_bSkipWallPlacingOnBB = False, $g_iCmbFillIncorrectTroopCombo = 0, $g_iCmbFillIncorrectSpellCombo = 0
 Global $g_bEnableCCSleep = False, $g_bSkipDT = False
-Global $g_hChkSmartFarmAndRandomQuant = True ; Endzy
+
 ;Builder Base
 Global $g_bDebugBBattack = False
 Global $g_bBBForceCustomArmy = False
 Global $g_iBBAttacked = False ; DoAttackBB attacked or not
-Global $g_bUseSmartFarmAndRandomQuant = True ; Endzy
+
 ;ClanCapital
 Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableAutoUpgradeCC = False, $g_bChkAutoUpgradeCCIgnore = False
 Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False
