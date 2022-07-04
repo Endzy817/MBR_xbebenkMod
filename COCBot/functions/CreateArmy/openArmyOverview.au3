@@ -21,16 +21,17 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 		EndIf
 	EndIf
 	
-	For $i = 0 To 2 ;try 3 time to OpenArmyOverview 
-		If WaitforPixel(23, 520, 53, 525, Hex(0xFFFFE4, 6), 5, 5) Then
-			If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
-			ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
-		EndIf
-		For $z = 0 To 3
-			If _Sleep(500) Then Return
-			If _ColorCheck(_GetPixelColor(40, 580, True), Hex(0xE8E8E0, 6), 1) Then Return True
-		Next
-	Next
+	Click(Random(24,52,1),Random(510,5451,)) ; Cllick(38,529)
+	;For $i = 0 To 2 ;try 3 time to OpenArmyOverview 
+	;	If WaitforPixel(23, 520, 53, 525, Hex(0xFFFFE4, 6), 5, 5) Then
+	;		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
+	;		ClickP($aArmyTrainButton, 1, 0, "#0293") ; Button Army Overview
+	;	EndIf
+	;	For $z = 0 To 3
+	;		If _Sleep(500) Then Return
+	;		If _ColorCheck(_GetPixelColor(40, 580, True), Hex(0xE8E8E0, 6), 1) Then Return True
+	;	Next
+	;Next
 	Return False
 EndFunc   ;==>OpenArmyOverview
 
