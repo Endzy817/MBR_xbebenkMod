@@ -21,7 +21,7 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 		EndIf
 	EndIf
 	
-	Click(Random(24,52,1),Random(510,5451,)) ; Cllick(38,529)
+	Click(Random(24,52,1),Random(510,545,1)) ; Cllick(38,529)
 	;For $i = 0 To 2 ;try 3 time to OpenArmyOverview 
 	;	If WaitforPixel(23, 520, 53, 525, Hex(0xFFFFE4, 6), 5, 5) Then
 	;		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
