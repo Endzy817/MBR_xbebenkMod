@@ -22,6 +22,7 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 	EndIf
 	
 	Click(Random(24,52,1),Random(510,545,1)) ; Cllick(38,529)
+	If _Sleep(500) Then Return
 	;For $i = 0 To 2 ;try 3 time to OpenArmyOverview 
 	;	If WaitforPixel(23, 520, 53, 525, Hex(0xFFFFE4, 6), 5, 5) Then
 	;		If $g_bDebugSetlogTrain Then SetLog("Click $aArmyTrainButton" & " (Called from " & $sWhereFrom & ")", $COLOR_SUCCESS)
@@ -32,7 +33,7 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 	;		If _ColorCheck(_GetPixelColor(40, 580, True), Hex(0xE8E8E0, 6), 1) Then Return True
 	;	Next
 	;Next
-	Return False
+	Return True
 EndFunc   ;==>OpenArmyOverview
 
 Func OpenArmyTab($bSetLog = True, $sWhereFrom = "Undefined")
