@@ -100,13 +100,13 @@ Func _makerequest($x, $y, $bTest, $bNRtTxt)
 
 	If $RequestWindowOpen And $bNRtTxt = 1 Then ; Not type req text
 		If _Sleep(2000) Then Return
-		For $i = 1 To 5
+		For $i = 1 To 10
 			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
 			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
 				SetDebugLog("Make final request", $COLOR_ACTION)
+				SetDebugLog("Fast Request - Request sent succesfully", $COLOR_SUCCESS)
 				If Not $bTest Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Fast Request - Request sent succesfully", $COLOR_SUCCESS)
 				Else
 					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				EndIf
@@ -130,13 +130,13 @@ Func _makerequest($x, $y, $bTest, $bNRtTxt)
 		If _Sleep(2000) Then Return ; wait time for text request to complete
 		Click($g_iQuickMISX + 95, $g_iQuickMISY)
 		If _Sleep(1000) Then Return ; wait time after clicking request window border
-		For $i = 1 To 5
+		For $i = 1 To 10
 			SetDebugLog("Try Click Send Request #" & $i, $COLOR_ACTION)
 			If QuickMis("BC1", $g_sImgSendRequestButton, 440, 380, 600, 600, True) Then ;lets check again the send button position with wider height
 				SetDebugLog("Make final request", $COLOR_ACTION)
 				If Not $bTest Then
 					Click($g_iQuickMISX, $g_iQuickMISY)
-					SetLog("Default - Request sent succesfully", $COLOR_SUCCESS)
+					SetDebugLog("Default - Request sent succesfully", $COLOR_SUCCESS)
 				Else
 					SetLog("Emulate Click : [" & $g_iQuickMISX & "," & $g_iQuickMISY & "]", $COLOR_INFO)
 				EndIf
