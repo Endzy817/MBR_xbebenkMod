@@ -987,7 +987,7 @@ Global $g_abUpgradeRepeatEnable[$g_iUpgradeSlots] = [False, False, False, False,
 ; Walls
 Global $g_bAutoUpgradeWallsEnable = 0
 Global $g_iUpgradeWallMinGold = 0, $g_iUpgradeWallMinElixir = 0, $g_bUpgradeWallIfStorageIsFull = True
-Global $g_iUpgradeWallLootType = 0, $g_bUpgradeWallSaveBuilder = False, $g_bChkOnly1Builder = False, $g_bchkSyncTHWall = False
+Global $g_iUpgradeWallLootType = 0, $g_bUpgradeWallSaveBuilder = False, $g_bChkOnly1Builder = False
 Global $g_iUpgradedWallLevel = 0, $g_bUpgradeLowWall = False, $g_iLowLevelWall = 4, $g_bUpgradeAnyWallLevel = False
 Global $g_aiWallsCurrentCount[16] = [-1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] ; elements 0 to 3 are not referenced
 Global $g_aiLastGoodWallPos[2] = [0, 0] ;0 = x, 1 = y, 2 = wall level
@@ -1971,7 +1971,7 @@ Global $g_bChkStartWeekendRaid = True
 ;[stoneName, SceneryName, stone2tree distance, DiamondInnerXleft, DiamondInnerXRight, DiamondInnerYTop, DiamondInnerYBottom]
 Global $g_aVillageRefSize[16][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], _ ;ok
 									["JS", "Jungle", 566.60, 69, 796, 64, 609], _ ;ok
-									["BB", "BuilderBase", 523, 117, 748, 128, 595], _
+									["BB", "BuilderBase", 560.2, 88, 793, 91, 617], _ ;ok
 									["CC", "Clashy Construction", 642.40, 50, 811, 60, 636], _ ;ok
 									["PC", "Pirate", 598.68, 50, 812, 63, 634], _ ;ok
 									["EW", "Winter", 576.41, 68, 794, 61, 607], _ ;ok

@@ -191,7 +191,6 @@ Func DefaultZoomOut($ZoomOutKey = "{DOWN}", $tryCtrlWheelScrollAfterCycles = 40,
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		ZoomOutHelper("DefaultZoomOut")
-		If $g_sSceneryCode = "BB" Then ZoomOutHelperBB("DefaultZoomOut")
 		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 	EndIf
 	If Not $g_bRunState Then Return
@@ -281,7 +280,6 @@ Func ZoomOutCtrlWheelScroll($CenterMouseWhileZooming = True, $GlobalMouseWheel =
 	
 	If $aPicture[0] = "" And $aPicture[1] = "0" Then 
 		ZoomOutHelper("DefaultZoomOut")
-		If $g_sSceneryCode = "BB" Then ZoomOutHelperBB("DefaultZoomOut")
 		$aPicture = SearchZoomOut($aCenterHomeVillageClickDrag, True, "", True)
 	EndIf
 
