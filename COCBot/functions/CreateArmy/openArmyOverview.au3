@@ -20,7 +20,7 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 			Return False
 		EndIf
 	EndIf
-
+	If _Sleep(Random(2500,3500,1)) Then Return
 	Click(Random(24,52,1),Random(510,545,1)) ; Cllick(38,529)
 	If _Sleep(Random(2500,3500,1)) Then Return
 
