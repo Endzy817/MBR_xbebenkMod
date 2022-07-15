@@ -151,8 +151,6 @@ Func _makerequest($x, $y, $bTest, $bNRtTxt)
 		SetDebugLog("Send request button not found", $COLOR_DEBUG)
 	EndIf
 	If _Sleep(1000) Then Return
-	ClickAway()
-	ClickAway()
 
 	;If _Sleep($DELAYMAKEREQUEST2) Then Return
 EndFunc   ;==>_makerequest
