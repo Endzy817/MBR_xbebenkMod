@@ -1964,7 +1964,7 @@ Global $g_bUseSmartFarmAndRandomQuant = True ; Endzy
 Global $g_iLootCCGold = 0, $g_iLootCCMedal = 0, $g_bChkEnableAutoUpgradeCC = False, $g_bChkAutoUpgradeCCIgnore = False
 Global $g_bChkEnableCollectCCGold = False, $g_bChkEnableForgeGold = False, $g_bChkEnableForgeElix = False
 Global $g_bChkEnableForgeDE = False, $g_bChkEnableForgeBBGold = False, $g_bChkEnableForgeBBElix = False, $g_iCmbForgeBuilder = 0
-Global $aCCBuildingIgnore[9] = ["Grove", "Tree", "Forest", "Campsite", "Stone Circle", "Stone", "Pillar", "Forest Circle", "The First"]
+Global $aCCBuildingIgnore[12] = ["Ruined", "Big Barbarian", "Pyre", "Boulder", "Bonfire", "Grove", "Tree", "Forest", "Campsite", "Stone", "Pillar", "The First"]
 Global $g_bChkStartWeekendRaid = True
 
 ;Village Reference size, add info here for every scenery:
