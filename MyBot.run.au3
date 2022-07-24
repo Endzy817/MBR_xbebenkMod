@@ -727,8 +727,8 @@ Func runBot() ;Bot that runs everything in order
 	EndIf
 
 	FirstCheck()
-
-	While 1
+	checkSwitchAcc()
+#cs	While 1
 		;Restart bot after these seconds
 		If $b_iAutoRestartDelay > 0 And __TimerDiff($g_hBotLaunchTime) > $b_iAutoRestartDelay * 1000 Then
 			If RestartBot(False) Then Return
@@ -881,6 +881,7 @@ Func runBot() ;Bot that runs everything in order
 		If _Sleep($DELAYRUNBOT1) Then Return
 		If $g_bRestart = True Then ContinueLoop
 	WEnd
+#ce
 EndFunc   ;==>runBot
 
 Func Idle() ;Sequence that runs until Full Army
