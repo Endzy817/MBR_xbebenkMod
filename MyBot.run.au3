@@ -1278,7 +1278,10 @@ Func FirstCheck()
 		checkSwitchAcc()
 	Else
 		FirstCheckRoutine()
+		checkSwitchAcc()
 	EndIf
+
+	checkSwitchAcc()
 EndFunc   ;==>FirstCheck
 
 Func FirstCheckRoutine()
