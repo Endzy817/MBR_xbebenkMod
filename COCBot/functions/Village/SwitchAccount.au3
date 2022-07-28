@@ -201,9 +201,9 @@ Func CheckSwitchAcc()
 		If $g_bChkFastSwitchAcc Then
 			If $g_bRequestTroopsEnable Then
 				If _Sleep(1000) Then Return
-				;SetLog("Requesting CC troops before switching account", $COLOR_DEBUG)
-				;_RunFunction('FstReq')
-				CGP0()
+				SetLog("Requesting CC troops before switching account", $COLOR_DEBUG)
+				_RunFunction('FstReq')
+				;CGP0()
 			EndIf
 		Else
 			If $g_bRequestTroopsEnable Then
