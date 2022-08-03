@@ -1195,7 +1195,7 @@ Func __RunFunction($action)
 			DailyChallenges()
 			;_Sleep($DELAYRUNBOT3)
 			checkMainScreen(False, $g_bStayOnBuilderBase, "DailyChallenge")
-		 Case "RequestCC"
+		Case "RequestCC"
 			RequestCC()
 		Case "Laboratory"
 			Laboratory()
@@ -1491,15 +1491,15 @@ Func CommonRoutine($RoutineType = Default)
 				;check storages if 70% full then do these upgrade routines, great time saver and more human-like
 				If $g_iFreeBuilderCount > 0 Then ; if 2 builder available and storages 70% full then do upgrades
 					If _ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
-					Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
-					For $Index In $aRndFuncList
-						If Not $g_bRunState Then Return
-						_RunFunction($Index)
-						If _Sleep(100) Then Return
-						If $g_bRestart Then Return
-						If Not $g_bRunState Then Return
-					Next
-					;EndIf
+						Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
+						For $Index In $aRndFuncList
+							If Not $g_bRunState Then Return
+							_RunFunction($Index)
+							If _Sleep(100) Then Return
+							If $g_bRestart Then Return
+							If Not $g_bRunState Then Return
+						Next
+					EndIf
 				EndIf
 			EndIf
 
@@ -1511,6 +1511,7 @@ Func CommonRoutine($RoutineType = Default)
 				_RunFunction($Index)
 				If _Sleep(500) Then Return
 				If $g_bRestart Then Return
+				If Not $g_bRunState Then Return
 			Next
 
 		Case "NCGE2" ; NoClanGamesEvent
