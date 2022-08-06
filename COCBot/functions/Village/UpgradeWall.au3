@@ -137,7 +137,7 @@ Func WallCheckResource($Cost = $g_aiWallCost[$g_aUpgradeWall[0]], $iWallLevel = 
 		Case 2 ;Elixir then Gold
 			Local $HaveGold = IsGoldEnough($Cost)
 			Local $HaveElix = IsElixEnough($Cost)
-			If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold And $g_aiCurrentLoot[$eLootElixir] < $g_iUpgradeWallMinElixir Then $HaveResource = False
+			;If $g_aiCurrentLoot[$eLootGold] < $g_iUpgradeWallMinGold And $g_aiCurrentLoot[$eLootElixir] < $g_iUpgradeWallMinElixir Then $HaveResource = False
 			If Number($iWallLevel) > 3 Then
 				$HaveResource = $HaveElix
 				If $HaveResource Then $UpgradeType = "Elix"
@@ -180,7 +180,7 @@ Func UpgradeLowLevelWall($bTest = False)
 	If Not $g_bRunState Then Return
 	SetLog("Upgrade LowLevel Wall using autoupgrade enabled", $COLOR_DEBUG)
 	If Not ClickMainBuilder($bTest) Then Return
-	Local $aWallCoord, $Try = 1, $WallNotFound = False
+	Local $aWallCoord, $Try = 1, $WallNotFound = False, $PrevCost = 0
 	While True
 		If Not $g_bRunState Then Return
 		If Not WallUpgradeCheckBuilder($bTest) Then Return
@@ -197,7 +197,14 @@ Func UpgradeLowLevelWall($bTest = False)
 		EndIf
 		
 		If IsArray($aWallCoord) And UBound($aWallCoord) > 0 Then ; found a wall or list of wall
-			Local $aIsEnoughResource = WallCheckResource($aWallCoord[0][2]) ;check upgrade from lowest to highest price 
+			If $PrevCost <> $aWallCoord[0][2] Then
+				SetLog("Found a different wall!", $COLOR_INFO)
+				$Try -= 1
+			EndIf
+			
+			Local $aIsEnoughResource = WallCheckResource($aWallCoord[0][2]) ;check upgrade from lowest to highest price
+			$PrevCost = $aWallCoord[0][2]
+			
 			If Not $aIsEnoughResource[0] Then 
 				SetDebugLog("01-Not WallCheckResource, Exiting")
 				ContinueLoop ; lets check another wall on list
@@ -526,10 +533,10 @@ Func setMinSaveWall($Type, $cost)
 	Switch $Type
 		Case "Gold"
 			$g_iSaveGoldWall = $cost
-			SetLog("Set Save Gold for RusTH Priority = " & $g_iSaveGoldWall, $COLOR_ACTION)
+			SetLog("Set Save Gold for RushTH Priority = " & $g_iSaveGoldWall, $COLOR_ACTION)
 		Case "Elix"
 			$g_iSaveElixWall = $cost
-			SetLog("Set Save Elixir for RusTH Priority = " & $g_iSaveElixWall, $COLOR_ACTION)
+			SetLog("Set Save Elixir for RushTH Priority = " & $g_iSaveElixWall, $COLOR_ACTION)
 	EndSwitch
 EndFunc
 
