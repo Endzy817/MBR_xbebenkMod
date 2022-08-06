@@ -1215,16 +1215,19 @@ Func __RunFunction($action)
 			AutoUpgrade()
 			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
+			ClickAway()
 		Case "UpgradeWall"
 			$g_iNbrOfWallsUpped = 0
 			ClickAway()
 			UpgradeWall()
 			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
+			ClickAway()
 		Case "UpgradeLow"
 			AutoUpgrade(False, True)
 			ZoomOut()
 			_Sleep($DELAYRUNBOT3)
+			ClickAway()
 		Case "BuilderBase"
 			If $g_bChkCollectBuilderBase Or $g_bChkStartClockTowerBoost Or $g_iChkBBSuggestedUpgrades Or $g_bChkEnableBBAttack Then
 				BuilderBase()
