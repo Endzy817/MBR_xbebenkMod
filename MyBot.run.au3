@@ -1343,19 +1343,28 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
 
+	Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
+	_ArrayShuffle($aRndFuncList)
+	For $Index In $aRndFuncList
+		If Not $g_bRunState Then Return
+		_RunFunction($Index)
+		If _Sleep(50) Then Return
+		If $g_bRestart Then Return
+	Next
+
 ; ------------------ F I R S T  A T T A C K ------------------
 	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
 		If Not $g_bRunState Then Return
-		;If $g_bDonateEarly Then
-		;	SetLog("Donate Early Enabled", $COLOR_INFO)
-		;	checkArmyCamp(True, True)
-		;	_Sleep(1000)
-		;	PrepareDonateCC()
-		;	DonateCC()
-		;EndIf
+		If $g_bDonateEarly Then
+			SetLog("Donate Early Enabled", $COLOR_INFO)
+			checkArmyCamp(True, True)
+			_Sleep(1000)
+			PrepareDonateCC()
+			DonateCC()
+		EndIf
 		TrainSystem()
 		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
 		If Not $g_bIsFullArmywithHeroesAndSpells Then
