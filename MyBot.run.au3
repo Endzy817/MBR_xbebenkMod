@@ -1467,12 +1467,15 @@ Func FirstCheckRoutine()
 	TrainSystem()
 	_RunFunction('DonateCC,Train') ; 1st donateCC
 
+	_RunFunction('UpgradeWall')
+
 	If Not $g_bRunState Then Return
 	CommonRoutine("FCR0") ; FirstCheckRoutine
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		CommonRoutine("SA3") ;routines before switch account
 		checkSwitchAcc() ;switch to next account
 	EndIf
+
 EndFunc  ;===> FirstCheckRoutine
 
 Func CommonRoutine($RoutineType = Default)
@@ -1482,7 +1485,7 @@ Func CommonRoutine($RoutineType = Default)
 		Case "FCR0" ; FIrstCheckRoutine
 			If $g_bChkOnlyAttack Then
 				SetLog("ChkOnlyAttack enabled, skipping some routines", $COLOR_INFO)
-				Local $aRndFuncList = ['Collect', 'FstReq', 'UpgradeHeroes', 'Laboratory', 'ForgeClanCapitalGold']
+				Local $aRndFuncList = ['Collect', 'FstReq', 'UpgradeHeroes', 'Laboratory', 'ForgeClanCapitalGold', 'UpgradeWall']
 				_ArrayShuffle($aRndFuncList)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return

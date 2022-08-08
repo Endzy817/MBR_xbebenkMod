@@ -116,7 +116,7 @@ Func EU0() ; Early Upgrades
 		EndIf
 		Setlog("Early upgrades enabled", $COLOR_INFO)
 		;If $g_iFreeBuilderCount > 0 And (_ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1)) Then
-		If $g_iFreeBuilderCount = 0 Then
+		If $g_iFreeBuilderCount <= 1 Then
 			Setlog("Your account have only 1 builder, Only do UpgradeWall", $COLOR_INFO)
 			SetLog("Check Upgrade Wall Early", $COLOR_INFO)
 			_RunFunction('UpgradeWall') ;UpgradeWall()
@@ -126,19 +126,22 @@ Func EU0() ; Early Upgrades
 			CleanYard()
 			_Sleep(8000) ;add wait after clean yard
 			UpgradeHeroes() ;Early Hero Upgrade
-		ElseIf $g_iFreeBuilderCount > 0 Or = 1 Then
-			Setlog("Your account have more than 1 builder, doing AutoUpgrade now", $COLOR_INFO)
-			If Not $g_bRunState Then Return
-			If $g_bAutoUpgradeEarly Then
-				SetLog("Check Auto Upgrade Early", $COLOR_INFO)
-				checkArmyCamp(True, True) ;need to check reserved builder for heroes
-				AutoUpgrade()
-			EndIf
-			VillageReport()
 			ZoomOut()
+		ElseIf $g_iFreeBuilderCount >=1 Then
+			If _ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
+				Setlog("Your account have more than 1 builder, doing AutoUpgrade now", $COLOR_INFO)
+				If Not $g_bRunState Then Return
+				If $g_bAutoUpgradeEarly Then
+					SetLog("Check Auto Upgrade Early", $COLOR_INFO)
+					checkArmyCamp(True, True) ;need to check reserved builder for heroes
+					AutoUpgrade()
+				EndIf
+				VillageReport()
+				ZoomOut()
 
-			UpgradeHeroes() ;Early Hero Upgrade
-			ZoomOut()
+				UpgradeHeroes() ;Early Hero Upgrade
+				ZoomOut()
+			EndIf
 		Else
 			;SetLog("Your acc doesn't have a builder available or storages are not 70% full", $COLOR_INFO)
 			SetLog("Your acc doesn't have a builder available", $COLOR_INFO)
