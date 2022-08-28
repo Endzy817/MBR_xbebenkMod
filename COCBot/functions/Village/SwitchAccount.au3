@@ -202,17 +202,17 @@ Func CheckSwitchAcc()
 			If $g_bRequestTroopsEnable Then
 				If _Sleep(1000) Then Return
 				SetLog("Requesting CC troops before switching account", $COLOR_DEBUG)
-				; _RunFunction('FstReq')
-				CGP0()
+				 _RunFunction('FstReq')
+				;CGP0()
 			EndIf
 		Else
 			If $g_bRequestTroopsEnable Then
 				SetLog("Try RequestCC, Donate And Train before switching account", $COLOR_DEBUG)
-				CGP0()
-				;RequestCC()
-				;PrepareDonateCC()
-				;DonateCC()
-				;TrainSystem()
+				;CGP0()
+				RequestCC()
+				PrepareDonateCC()
+				DonateCC()
+				TrainSystem()
 			EndIf
 		EndIf
 		If Not $g_bForceSwitchifNoCGEvent Then _ClanGames(False, $g_bChkForceBBAttackOnClanGames, True)
