@@ -864,6 +864,7 @@ Global $g_bMakeScreenshotNow = False ; Used to create Screenshot in _Sleep if Sc
 ; <><><><> Village / Misc <><><><>
 Global $g_bChkBotStop = False, $g_iCmbBotCommand = 0, $g_iCmbBotCond = 0, $g_iCmbHoursStop = 0, $g_iCmbTimeStop = 0
 Global $g_abFullStorage[$eLootCount] = [False, False, False, False], $g_aiResumeAttackLoot[$eLootCount] = [0, 0, 0, 0], $g_iResumeAttackTime = 0
+Global $g_abLowStorage[$eLootCount] = [False, False, False, False]
 Global $g_bCollectStarBonus = False
 Global $g_iTxtRestartGold = 10000
 Global $g_iTxtRestartElixir = 25000
@@ -965,9 +966,9 @@ Global $g_iDonateSkipNearFullPercent = 90
 Global $g_bAutoLabUpgradeEnable = False, $g_iCmbLaboratory = 0, $g_bAutoStarLabUpgradeEnable = False, $g_iCmbStarLaboratory = 0, $g_bUpgradeSiegeToLvl2 = True
 
 Global $g_hChkLabUpgradeOrder = 0, $g_hBtnRemoveLabUpgradeOrder = 0, $g_hBtnSetLabUpgradeOrder = 0, $g_hUpgradeAnyTroops = 0, $g_hUpgradeSiegeToLvl2 = 0
-Global $g_hChkSLabUpgradeOrder = 0, $g_hBtnRemoveSLabUpgradeOrder = 0, $g_hBtnSetSLabUpgradeOrder = 0
+Global $g_hChkSLabUpgradeOrder = 0, $g_hBtnRemoveSLabUpgradeOrder = 0, $g_hBtnSetSLabUpgradeOrder = 0, $g_hChkUpgradeAnyIfAllOrderMaxed = 0
 Global $g_bLabUpgradeOrderEnable = False
-Global $g_bSLabUpgradeOrderEnable = False
+Global $g_bSLabUpgradeOrderEnable = False, $g_bUpgradeAnyIfAllOrderMaxed = False
 Global $g_aCmbLabUpgradeOrder[10] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 Global $g_ahCmbLabUpgradeOrder[10] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 Global $g_aCmbSLabUpgradeOrder[6] = [-1, -1, -1, -1, -1, -1]
@@ -1431,12 +1432,12 @@ Global $g_sLabUpgradeTime = ""
 Global $g_sStarLabUpgradeTime = ""
 
 ; Array to hold Laboratory Troop information [LocX of upper left corner of image, LocY of upper left corner of image, PageLocation, Troop "name", Icon # in DLL file, ShortName on image file]
-Global $g_avLabTroops[43][3]
+Global $g_avLabTroops[45][3]
 Global $g_avStarLabTroops[12][6]
 
 ; [0] Name, [1] Icon [2] ShortName
 Func TranslateTroopNames()
-	Dim $g_avLabTroops[43][3] = [ _
+	Dim $g_avLabTroops[45][3] = [ _
 			[GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"), $eIcnBlank], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtBarbarians", "Barbarians"), $eIcnBarbarian, "Barb"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtArchers", "Archers"), $eIcnArcher, "Arch"], _
@@ -1479,7 +1480,9 @@ Func TranslateTroopNames()
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtStoneSlammers", "Stone Slammer"), $eIcnStoneS, "StoneS"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtSiegeBarracks", "Siege Barracks"), $eIcnSiegeB, "SiegeB"], _
 			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtLogLauncher", "Log Launcher"), $eIcnLogL, "LogL"], _
-			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtFlameFlinger", "Flame Flinger"), $eIcnFlameF, "FlameF"]]
+			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtFlameFlinger", "Flame Flinger"), $eIcnFlameF, "FlameF"], _
+			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtAnySiege", "Any Spell"), $eIcnBlank, "AnySpell"], _
+			[GetTranslatedFileIni("MBR Global GUI Design Names Troops", "TxtAnySiege", "Any Siege"), $eIcnBlank, "AnySiege"]]
 
 	Dim $g_avStarLabTroops[12][6] = [ _
 			[-1, -1, -1, GetTranslatedFileIni("MBR Global GUI Design", "Any", "Any"), $eIcnBlank, "Any"], _
