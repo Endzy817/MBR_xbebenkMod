@@ -1615,8 +1615,6 @@ Func BuilderBase()
 		CollectBuilderBase()
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		
-		If $g_bElixirStorageFullBB Then StartClockTowerBoost()
-		
 		CleanBBYard()
 		If _Sleep($DELAYRUNBOT1) Then Return
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
@@ -1651,14 +1649,14 @@ Func BuilderBase()
 			StarLaboratory()
 			If _Sleep($DELAYRUNBOT1) Then Return
 			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+			ZoomOut(True) ;directly zoom 
 		EndIf
-		ZoomOut(True) ;directly zoom 
+		
 		StartClockTowerBoost()
 		If _Sleep($DELAYRUNBOT3) Then Return
 		BuilderBaseReport(False, True, False)
 		If _Sleep($DELAYRUNBOT3) Then Return
-		; switch back to normal village
-		ZoomOut(True) ;directly zoom 
+		
 		$g_bStayOnBuilderBase = False
 		SwitchBetweenBases("Main")
 	EndIf
