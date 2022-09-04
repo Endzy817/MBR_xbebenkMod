@@ -47,7 +47,7 @@ Func AutoUpgradeCheckBuilder($bTest = False)
 		$g_iFreeBuilderCount = 1
 		$bRet = True
 	EndIf
-
+	
 	SetDebugLog("AutoUpgradeCheckBuilder() Free Builder : " & $g_iFreeBuilderCount, $COLOR_DEBUG)
 	Return $bRet
 EndFunc
@@ -80,7 +80,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 	EndIf
 
 	If AutoUpgradeCheckBuilder($bTest) Then ;Check if we have builder
-		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost Then ;skip if will use for lowcost upgrade
+		If $g_bNewBuildingFirst And Not $g_bUpgradeLowCost And Not $g_bSkipWallReserve Then ;skip if will use for lowcost/use wall reserve builder for upgrade
 			If $g_bPlaceNewBuilding Then AutoUpgradeSearchNewBuilding($bTest) ;search new building
 			If Not AutoUpgradeCheckBuilder($bTest) Then ;Check if we still have builder
 				ZoomOut(True)
@@ -90,6 +90,7 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 			_Sleep(5000)
 		EndIf
 	Else
+		CheckBuilderPotion()
 		Return
 	EndIf
 
@@ -104,10 +105,37 @@ Func SearchUpgrade($bTest = False, $bUpgradeLowCost = False)
 		If AutoUpgradeCheckBuilder($bTest) Then AutoUpgradeSearchNewBuilding($bTest)
 	EndIf
 	
+	CheckBuilderPotion()
 	If Not $g_bRunState Then Return
 	Clickaway("Right")
 	ZoomOut()
 	Return False
+EndFunc
+
+Func CheckBuilderPotion()
+	If Not $g_bRunState Then Return
+	If $g_bUseBuilderPotion And $g_iFreeBuilderCount = 0 Then 
+		SetLog("Checking for Use Builder Potion", $COLOR_INFO)
+		ClickMainBuilder()
+		SetLog("Checking current upgrade", $COLOR_INFO)
+		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
+			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
+			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
+			If $mUpgradeTime > 1440 Then
+				SetLog("Upgrade time > 24h, will use Builder Potion", $COLOR_INFO)
+				Click($g_iQuickMISX, $g_iQuickMISY)
+				If _Sleep(1000) Then Return
+				If ClickB("BuilderPot") Then
+					If _Sleep(1000) Then Return
+					If ClickB("BoostPotion") Then
+						SetLog("Builder Boosted using potion", $COLOR_SUCCESS)
+					EndIf
+				Else
+					SetLog("BuilderPot Not Found", $COLOR_DEBUG)
+				EndIf
+			EndIf
+		EndIf
+	EndIf
 EndFunc
 
 Func AutoUpgradeSearchExisting($bTest = False)
@@ -692,6 +720,12 @@ Func AutoUpgradeLog($aUpgradeNameLevel = Default, $aUpgradeResourceCostDuration 
 			$aUpgradeNameLevel[1] = "Traps"
 			$bRet = False
 		EndIf
+		
+		Switch $aUpgradeNameLevel[1]
+			Case "Cannon", "Elixir Collector", "Gold Mine"
+				_SleepStatus(12000)
+		EndSwitch
+		
 		_GUICtrlEdit_AppendText($g_hTxtAutoUpgradeLog, _
 				@CRLF & _NowDate() & " " & _NowTime() & " [" & $txtAcc + 1 & "] " & $txtAccName & _
 				" - Placing New Building: " & $aUpgradeNameLevel[1])
