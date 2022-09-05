@@ -449,7 +449,7 @@ Func IsCCBuilderMenuOpen()
 		SetDebugLog("$sTriangle: " & $sTriangle)
 		If $sTriangle = "^" Or $sTriangle = "~" Or $sTriangle = "@" Or $sTriangle = "$" Then $bRet = True
 	EndIf
-	SetDebugLog(String($bRet))
+	SetDebugLog("IsCCBuilderMenuOpen : " & String($bRet))
 	Return $bRet
 EndFunc
 
@@ -495,7 +495,7 @@ EndFunc
 
 Func FindCCSuggestedUpgrade()
 	Local $aResult[0][3], $name[2] = ["", 0]
-	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 550, 360)
+	Local $aUpgrade = QuickMIS("CNX", $g_sImgResourceCC, 400, 100, 560, 360)
 	If IsArray($aUpgrade) And UBound($aUpgrade) > 0 Then
 		_ArraySort($aUpgrade, 0, 0, 0, 2) ;sort by Y coord
 		For $i = 0 To UBound($aUpgrade) - 1
@@ -505,10 +505,18 @@ Func FindCCSuggestedUpgrade()
 			Else
 				$name = getCCBuildingNameBlue($aUpgrade[$i][1] - 200, $aUpgrade[$i][2] - 12)
 			EndIf
+			
+			If $g_bChkAutoUpgradeCCIgnore Then 
+				If QuickMIS("BC1", $g_sImgDecoration, $aUpgrade[$i][1] - 250, $aUpgrade[$i][2] - 10, $aUpgrade[$i][1], $aUpgrade[$i][2] + 13) Then
+					SetLog("Decoration detected, Skip!!", $COLOR_ACTION)
+					ContinueLoop ;skip this upgrade, looking next
+				EndIf
+			EndIf
+			
 			If $g_bChkAutoUpgradeCCWallIgnore Then ; Filter for wall
 				If StringInStr($name[0], "Wall") Then 
-						SetLog("Upgrade for Wall Ignored, Skip!!", $COLOR_ACTION)
-						ContinueLoop ;skip this upgrade, looking next 
+					SetLog("Upgrade for Wall Ignored, Skip!!", $COLOR_ACTION)
+					ContinueLoop ;skip this upgrade, looking next 
 				EndIf
 			EndIf
 			If $g_bChkAutoUpgradeCCIgnore Then 
