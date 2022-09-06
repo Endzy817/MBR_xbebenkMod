@@ -1568,6 +1568,7 @@ Func BuilderBase()
 	; switch to builderbase and check it is builderbase
 	If SwitchBetweenBases("BB") Then
 		$g_bStayOnBuilderBase = True
+		Local $StartLabON = False
 		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
 		ZoomOut()
 		$g_iBBAttacked = True	; Reset Variable
