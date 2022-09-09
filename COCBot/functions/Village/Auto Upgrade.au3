@@ -117,12 +117,11 @@ Func CheckBuilderPotion()
 	If $g_bUseBuilderPotion And $g_iFreeBuilderCount = 0 Then 
 		SetLog("Checking for Use Builder Potion", $COLOR_INFO)
 		ClickMainBuilder()
-		SetLog("Checking current upgrade", $COLOR_INFO)
 		If QuickMIS("BC1", $g_sImgAUpgradeHour, 370, 105, 440, 140) Then
 			Local $sUpgradeTime = getBuilderLeastUpgradeTime($g_iQuickMISX - 50, $g_iQuickMISY - 8)
 			Local $mUpgradeTime = ConvertOCRTime("Least Upgrade", $sUpgradeTime)
-			If $mUpgradeTime > 1440 Then
-				SetLog("Upgrade time > 24h, will use Builder Potion", $COLOR_INFO)
+			If $mUpgradeTime > 540 Then
+				SetLog("Upgrade time > 9h, will use Builder Potion", $COLOR_INFO)
 				Click($g_iQuickMISX, $g_iQuickMISY)
 				If _Sleep(1000) Then Return
 				If ClickB("BuilderPot") Then
@@ -133,6 +132,8 @@ Func CheckBuilderPotion()
 				Else
 					SetLog("BuilderPot Not Found", $COLOR_DEBUG)
 				EndIf
+			Else
+				SetLog("Upgrade time < 9h, cancel using builder potion", $COLOR_INFO)
 			EndIf
 		EndIf
 	EndIf
@@ -1004,6 +1005,12 @@ Func FindNewBuilding()
 			$aBuilding[$j][6] = Number($UpgradeCost)
 			SetDebugLog("[" & $j & "] Building: " & $aBuilding[$j][4] & ", Cost=" & $aBuilding[$j][6] & " Coord [" &  $aBuilding[$j][1] & "," & $aBuilding[$j][2] & "]", $COLOR_DEBUG)
 		Next
+	EndIf
+	Local $iIndex = _ArraySearch($aBuilding, "0", 0, 0, 0, 0, 0, 6)
+	If $iIndex > -1 Then 
+		SetDebugLog(_ArrayToString($aBuilding))
+		SetDebugLog("Found Building with Zero cost, remove it", $COLOR_INFO)
+		_ArrayDelete($aBuilding, $iIndex)
 	EndIf
 	Return $aBuilding
 EndFunc
