@@ -552,9 +552,9 @@ Global $g_hAutoUpgradeEarly = 0, $g_hChkForceSwitchifNoCGEvent = 0, $g_hDonateEa
 Global $g_sCmbFICTroops[7][3] = [ _
 								["Barb",	"Barbarians",		1], _
 								["Arch",	"Archers",			1], _
-								["Giant",	"Giants",			5], _
+								["Gobl",	"Goblins",			1], _
 								["Ball",	"Balloons",			5], _
-								["Mini",	"Minions",			2], _
+								["SGobl",	"Super Goblins",	3], _
 								["SBarb",	"Super Barbarians",	5], _
 								["SMini",	"Super Minions",	12]]
 Global $g_sCmbFICSpells[6][3] = [ _
