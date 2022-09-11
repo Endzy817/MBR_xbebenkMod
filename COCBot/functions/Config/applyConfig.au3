@@ -321,7 +321,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetData($g_hTxtTreasuryDark, $g_iTxtTreasuryDark)
 			GUICtrlSetState($g_hChkCollectRewards, $g_bChkCollectRewards ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSellRewards, $g_bChkSellRewards ? $GUI_CHECKED : $GUI_UNCHECKED)
-			GUICtrlSetState($g_hChkDBNoLeague, $g_bChkNoLeague[$DB] = True ? $GUI_CHECKED : $GUI_UNCHECKED)	; Check No League for Dead Base
+
 			GUICtrlSetState($g_hChkCollectBuilderBase, $g_bChkCollectBuilderBase ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkCleanBBYard, $g_bChkCleanBBYard ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkStartClockTowerBoost, $g_bChkStartClockTowerBoost ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -490,7 +490,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_iTxtTreasuryDark = GUICtrlRead($g_hTxtTreasuryDark)
 			$g_bChkCollectRewards = (GUICtrlRead($g_hChkCollectRewards) = $GUI_CHECKED)
 			$g_bChkSellRewards = (GUICtrlRead($g_hChkSellRewards) = $GUI_CHECKED)
-			$g_bChkNoLeague[$DB] = (GUICtrlRead($g_hChkDBNoLeague) = $GUI_CHECKED) ; Check No League for Dead Base
+
 			$g_bChkCollectBuilderBase = (GUICtrlRead($g_hChkCollectBuilderBase) = $GUI_CHECKED)
 			$g_bChkCleanBBYard = (GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED)
 			$g_bChkStartClockTowerBoost = (GUICtrlRead($g_hChkStartClockTowerBoost) = $GUI_CHECKED)
