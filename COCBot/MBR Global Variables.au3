@@ -2001,3 +2001,10 @@ Global $g_aVillageRefSize[19][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], 
 									["10", "10th Clasivery", 561, 92, 791, 47, 570], _ ;ok
 									["W1", "Scenery1", 553.3, 61, 813, 55, 619]] ;ok
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
+
+; Check No League for Dead Base - Endzy
+Global $g_bChkNoLeague[$g_iModeCount] = [False, False, False]
+Global $g_iInpSmartZapTimes = 1 ;EndzyMod - SmartZap
+Global $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSetY = 0 ; Endzy
+Global $g_hChkSmartFarmAndRandomQuant = True ; Endzy
+Global $g_bUseSmartFarmAndRandomQuant = True ; Endzy
