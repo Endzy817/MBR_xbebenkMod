@@ -2000,3 +2000,4 @@ Global $g_aVillageRefSize[18][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], 
 									["PS", "Pixel", 560.6, 90, 768, 54, 570], _ ;ok
 									["10", "10th Clasivery", 561, 92, 791, 47, 570]] ;ok
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
+
