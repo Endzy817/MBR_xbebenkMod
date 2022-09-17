@@ -1117,3 +1117,4 @@ Func SCIDScrollUp()
 	Next
 EndFunc   ;==>SCIDScrollUp
 
+

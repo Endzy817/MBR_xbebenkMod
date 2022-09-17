@@ -2533,3 +2533,4 @@ Func ApplyConfig_641_1($TypeReadSave)
 			$g_iTrainAddRandomDelayMax = Int(GUICtrlRead($g_hTxtAddRandomDelayMax))
 	EndSwitch
 EndFunc   ;==>ApplyConfig_641_1
+
