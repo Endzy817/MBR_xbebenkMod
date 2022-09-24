@@ -1042,13 +1042,13 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 				SetDebugLog(_PadStringCenter(" Hero status check" & BitAND($g_aiAttackUseHeroes[$LB], $g_aiSearchHeroWaitEnable[$LB], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$LB] & "|" & $g_iHeroAvailable, 54, "="), $COLOR_DEBUG)
 				;SetLog("BullyMode: " & $g_abAttackTypeEnable[$TB] & ", Bully Hero: " & BitAND($g_aiAttackUseHeroes[$g_iAtkTBMode], $g_aiSearchHeroWaitEnable[$g_iAtkTBMode], $g_iHeroAvailable) & "|" & $g_aiSearchHeroWaitEnable[$g_iAtkTBMode] & "|" & $g_iHeroAvailable, $COLOR_DEBUG)
 			EndIf
-			;If Not $g_bRunState Then Return
-			;_ClanGames(False, $g_bChkForceBBAttackOnClanGames) ;Trying to do this above in the main loop
-			;ClickAway()
-			;If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
-			;	SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-			;	checkSwitchAcc()
-			;EndIf
+			If Not $g_bRunState Then Return
+			_ClanGames(False, $g_bChkForceBBAttackOnClanGames) ;Trying to do this above in the main loop
+			ClickAway()
+			If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
+				SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
+				checkSwitchAcc()
+			EndIf
 			If Not $g_bRunState Then Return
 			If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
@@ -1287,7 +1287,7 @@ Func FirstCheck()
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
-
+#cs
 	;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	Local $bLocateTH = False
@@ -1335,7 +1335,7 @@ Func FirstCheck()
 	EndIf
 
 	_RunFunction('EarlyUpgChk')
-
+#ce
 	If BotCommand() Then btnStop()
 
 	If T420() Then
@@ -1368,6 +1368,58 @@ Func FirstCheckRoutine()
 		If $g_bRestart Then Return
 	Next
 
+	If $g_bChkCGBBAttackOnly Then
+		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
+		For $count = 1 to 11
+			If Not $g_bRunState Then Return
+			If $count > 10 Then
+				SetLog("Something maybe wrong, exiting to MainLoop!", $COLOR_INFO)
+				ExitLoop
+			EndIf
+
+			If _ClanGames(False, $g_bChkForceBBAttackOnClanGames) Then
+				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
+				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+					GotoBBTodoCG()
+				Else
+					ExitLoop ;should be will never get here, but
+				EndIf
+			Else
+				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
+				If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
+				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
+			EndIf
+			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
+		Next
+	Else
+		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
+			SetLog("Check ClanGames Early", $COLOR_INFO)
+			_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
+			If Not $g_bRunState Then Return
+			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
+				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
+				GotoBBTodoCG()
+			EndIf
+		EndIf
+	EndIf
+
+	;Skip switch if Free Builder > 0 Or Storage Fill is Low, when clangames
+	Local $bSwitch = True
+	If $g_iFreeBuilderCount - ($g_bUpgradeWallSaveBuilder ? 1 : 0) > 0 Then $bSwitch = False
+	If $g_abLowStorage[$eLootElixir] Or $g_abLowStorage[$eLootGold] Then $bSwitch = False
+
+	If Not $g_bRunState Then Return
+	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 And $bSwitch Then
+		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
+		PrepareDonateCC()
+		DonateCC()
+		TrainSystem()
+		CommonRoutine("NoClanGamesEvent")
+		$g_bForceSwitchifNoCGEvent = True
+		checkSwitchAcc() ;switch to next account
+	EndIf
+#cs
 ; ------------------ F I R S T  A T T A C K ------------------
 	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
@@ -1482,9 +1534,9 @@ Func FirstCheckRoutine()
 	_RunFunction('DonateCC,Train') ; 1st donateCC
 
 	_RunFunction('UpgradeWall')
-
+#ce
 	If Not $g_bRunState Then Return
-	CommonRoutine("FCR0") ; FirstCheckRoutine
+	;CommonRoutine("FCR0") ; FirstCheckRoutine
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		CommonRoutine("SA3") ;routines before switch account
 		checkSwitchAcc() ;switch to next account
@@ -1560,7 +1612,8 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "SA3" ; switch
-			Local $aRndFuncList = ['CollectFreeMagicItems', 'DonateCC,Train', 'BuilderBase', 'CollectCCGold', 'CollectFreeMagicItems', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeWall', 'UpgradeLow']
+			;Local $aRndFuncList = ['CollectFreeMagicItems', 'DonateCC,Train', 'BuilderBase', 'CollectCCGold', 'CollectFreeMagicItems', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeWall', 'UpgradeLow']
+			Local $aRndFuncList = ['CollectFreeMagicItems', 'BuilderBase', 'CollectCCGold', 'CollectFreeMagicItems', 'AutoUpgradeCC', 'Laboratory']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
