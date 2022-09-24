@@ -1388,9 +1388,6 @@ Func FirstCheckRoutine()
 			Idle() ; if army is not ready amd close while training enabled
 		EndIf
 		If $g_bIsFullArmywithHeroesAndSpells Then
-			If T420() Then
-				SetLog("Test420 Done!", $COLOR_SUCCESS)
-			EndIf
 			; Now the bot can attack
 			If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
 				Setlog("Before any other routine let's attack!", $COLOR_INFO)
