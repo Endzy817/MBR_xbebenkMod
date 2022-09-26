@@ -1039,11 +1039,6 @@ Func AttackMain($bFirstStart = False) ;Main control for attack functions
 			EndIf
 			If Not $g_bRunState Then Return
 			_ClanGames(False, $g_bChkForceBBAttackOnClanGames) ;Trying to do this above in the main loop
-			;ClickAway()
-			;If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent Then
-			;	SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-			;	checkSwitchAcc()
-			;EndIf
 			If Not $g_bRunState Then Return
 			If $g_bUpdateSharedPrefs And $g_bChkSharedPrefs Then PullSharedPrefs()
 			PrepareSearch()
@@ -1494,10 +1489,11 @@ Func FirstCheckRoutine()
 	EndIf
 
 	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitch Then
+	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bForceSwitchifNoCGEvent) Then
 		PrepareDonateCC()
 		DonateCC()
 		TrainSystem()
+		CommonRoutine("Switch")
 		checkSwitchAcc() ;switch to next account
 	EndIf
 
@@ -1566,12 +1562,14 @@ Func FirstCheckRoutine()
 	CommonRoutine("FirstCheckRoutine")
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		CommonRoutine("Switch")
+		_ClanGames(False, False, True) ; Do Only Purge
 		checkSwitchAcc() ;switch to next account
 	EndIf
 EndFunc
 
 Func CommonRoutine($RoutineType = Default)
 	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
+	SetLog("Doing CommonRoutine: " & $RoutineType, $COLOR_SUCCESS)
 	Switch $RoutineType
 		Case "FirstCheckRoutine"
 			Local $aRndFuncList = ['Collect', 'DailyChallenge', 'CollectAchievements','CheckTombs', 'CleanYard', "SaleMagicItem", 'Laboratory', 'CollectFreeMagicItems']
@@ -1590,7 +1588,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "NoClanGamesEvent"
-			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase', 'CollectCCGold', 'AutoUpgradeCC']
+			Local $aRndFuncList = ['Collect', 'PetHouse', 'Laboratory', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'BuilderBase', 'CollectCCGold']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1599,7 +1597,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'CollectFreeMagicItems', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow']
+			Local $aRndFuncList = ['Laboratory', 'CollectCCGold', 'CollectFreeMagicItems', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
