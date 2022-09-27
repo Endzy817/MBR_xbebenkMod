@@ -1441,7 +1441,7 @@ Func FirstCheckRoutine()
 	EndIf
 
 	;Skip switch if Free Builder > 0 Or Storage Fill is Low, when clangames
-	;Local $bSwitch = True
+	Local $bSwitch = True
 	;If $g_iFreeBuilderCount - ($g_bUpgradeWallSaveBuilder ? 1 : 0) > 0 Then $bSwitch = False
 	;If $g_abLowStorage[$eLootElixir] Or $g_abLowStorage[$eLootGold] Then $bSwitch = False
 
