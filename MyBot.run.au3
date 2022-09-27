@@ -1308,9 +1308,8 @@ Func __RunFunction($action)
 					If _Sleep($DELAYRUNBOT1) Then Return
 				EndIf
 			EndIf
-		EndIf
-		If Not $g_bRunState Then Return
-		TrainSystem()
+			If Not $g_bRunState Then Return
+			TrainSystem()
 
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
