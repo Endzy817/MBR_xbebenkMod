@@ -1254,10 +1254,13 @@ Func __RunFunction($action)
 		Case "CollectCCGold"
 			CollectCCGold()
 			;_Sleep($DELAYRUNBOT3)
-             Case "CheckLeague"
+        Case "CheckLeague"
 			CheckLeague()
 		Case "FstReq"
 			RequestCC(1,1,0,1) ; fast request CC
+			ClickAway()
+			_Sleep(500)
+			ClickAway()
 		Case "BBRTN0"
 			BBRTN0()
 		Case "EarlyUpgChk"
@@ -1266,6 +1269,49 @@ Func __RunFunction($action)
 			DL0()
 		Case "DonateModeAtk"
 			DMA0()
+		Case "XtrAtk"
+			TrainSystem()
+			SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
+			If Not $g_bIsFullArmywithHeroesAndSpells Then
+				ClickAway()
+				Idle() ; if army is not ready amd close while training enabled
+			EndIf
+			If $g_bIsFullArmywithHeroesAndSpells Then
+				; Now the bot can attack
+				If $g_iCommandStop <> 0 And $g_iCommandStop <> 3 Then
+					Setlog("Before any other routine let's attack!", $COLOR_INFO)
+					Local $loopcount = 1
+					While True
+						$g_bRestart = False
+						If Not $g_bRunState Then Return
+						If AttackMain($g_bSkipDT) Then
+							Setlog("[" & $loopcount & "] 1st Attack Loop Success", $COLOR_SUCCESS)
+							If checkMainScreen(False, $g_bStayOnBuilderBase, "FirstCheckRoutine") Then ZoomOut()
+							ExitLoop
+						Else
+							If $g_bForceSwitch Then ExitLoop ;exit here
+							$loopcount += 1
+							If $loopcount > 5 Then
+								Setlog("1st Attack Loop, Already Try 5 times... Exit", $COLOR_ERROR)
+								ExitLoop
+							Else
+								Setlog("[" & $loopcount & "] 1st Attack Loop, Failed", $COLOR_INFO)
+							EndIf
+							If Not $g_bRunState Then Return
+						EndIf
+					Wend
+					If $g_bOutOfGold Then
+						SetLog("Switching to Halt Attack, Stay Online/Collect mode", $COLOR_ERROR)
+						$g_bFirstStart = True ; reset First time flag to ensure army balancing when returns to training
+						Return
+					EndIf
+					If _Sleep($DELAYRUNBOT1) Then Return
+				EndIf
+			EndIf
+		EndIf
+		If Not $g_bRunState Then Return
+		TrainSystem()
+
 		Case ""
 			SetDebugLog("Function call doesn't support empty string, please review array size", $COLOR_ERROR)
 		Case Else
@@ -1287,7 +1333,7 @@ Func FirstCheck()
 	$g_bRestart = False
 	$g_bFullArmy = False
 	$g_iCommandStop = -1
-#cs
+
 	;Check Town Hall level
 	Local $iTownHallLevel = $g_iTownHallLevel
 	Local $bLocateTH = False
@@ -1335,7 +1381,7 @@ Func FirstCheck()
 	EndIf
 
 	_RunFunction('EarlyUpgChk')
-#ce
+
 	If BotCommand() Then btnStop()
 
 	If T420() Then
@@ -1358,15 +1404,6 @@ Func FirstCheckRoutine()
 	SetLog("======== FirstCheckRoutine ========", $COLOR_ACTION)
 	If Not $g_bRunState Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
-	
-    Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
-	_ArrayShuffle($aRndFuncList)
-	For $Index In $aRndFuncList
-		If Not $g_bRunState Then Return
-		_RunFunction($Index)
-		If _Sleep(50) Then Return
-		If $g_bRestart Then Return
-	Next
 
 	If $g_bChkCGBBAttackOnly Then
 		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
@@ -1405,9 +1442,9 @@ Func FirstCheckRoutine()
 	EndIf
 
 	;Skip switch if Free Builder > 0 Or Storage Fill is Low, when clangames
-	Local $bSwitch = True
-	If $g_iFreeBuilderCount - ($g_bUpgradeWallSaveBuilder ? 1 : 0) > 0 Then $bSwitch = False
-	If $g_abLowStorage[$eLootElixir] Or $g_abLowStorage[$eLootGold] Then $bSwitch = False
+	;Local $bSwitch = True
+	;If $g_iFreeBuilderCount - ($g_bUpgradeWallSaveBuilder ? 1 : 0) > 0 Then $bSwitch = False
+	;If $g_abLowStorage[$eLootElixir] Or $g_abLowStorage[$eLootGold] Then $bSwitch = False
 
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 And $bSwitch Then
@@ -1419,7 +1456,16 @@ Func FirstCheckRoutine()
 		$g_bForceSwitchifNoCGEvent = True
 		checkSwitchAcc() ;switch to next account
 	EndIf
-#cs
+
+	Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
+	_ArrayShuffle($aRndFuncList)
+	For $Index In $aRndFuncList
+		If Not $g_bRunState Then Return
+		_RunFunction($Index)
+		If _Sleep(50) Then Return
+		If $g_bRestart Then Return
+	Next
+
 ; ------------------ F I R S T  A T T A C K ------------------
 	If Not $g_bRunState Then Return
 	If $g_iCommandStop <> 3 And $g_iCommandStop <> 0 Then
@@ -1534,12 +1580,16 @@ Func FirstCheckRoutine()
 	_RunFunction('DonateCC,Train') ; 1st donateCC
 
 	_RunFunction('UpgradeWall')
-#ce
+
 	If Not $g_bRunState Then Return
-	;CommonRoutine("FCR0") ; FirstCheckRoutine
+	CommonRoutine("FCR0") ; FirstCheckRoutine
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		CommonRoutine("SA3") ;routines before switch account
 		_ClanGames(False, False, True) ; Do Only Purge
+		ClickAway()
+		If _Sleep(500) Then Return
+		_RunFunction("XtrAtk")
+		If _Sleep(500) Then Return
 		checkSwitchAcc() ;switch to next account
 	EndIf
 
@@ -1549,7 +1599,7 @@ Func CommonRoutine($RoutineType = Default)
 	If $RoutineType = Default Then $RoutineType = "FirstCheckRoutine"
 	SetLog("Doing CommonRoutine: " & $RoutineType, $COLOR_SUCCESS)
     Switch $RoutineType
-    Case "FCR0" ; FirstCheckRoutine
+   		Case "FCR0" ; FirstCheckRoutine
 			If $g_bChkOnlyAttack Then
 				SetLog("ChkOnlyAttack enabled, skipping some routines", $COLOR_INFO)
 				Local $aRndFuncList = ['Collect', 'FstReq', 'UpgradeHeroes', 'Laboratory', 'ForgeClanCapitalGold', 'UpgradeWall']
@@ -1557,7 +1607,8 @@ Func CommonRoutine($RoutineType = Default)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
 					_RunFunction($Index)
-					If _Sleep(50) Then Return
+					If _Sleep(100) Then Return
+					ClickAway()
 					If $g_bRestart Then Return
 					If Not $g_bRunState Then Return
 				Next
@@ -1570,32 +1621,35 @@ Func CommonRoutine($RoutineType = Default)
 				For $Index In $aRndFuncList
 					If Not $g_bRunState Then Return
 					_RunFunction($Index)
-					If _Sleep(200) Then Return
+					If _Sleep(100) Then Return
+					ClickAway()
 					If $g_bRestart Then Return
 					If Not $g_bRunState Then Return
 				Next
 				;check storages if 70% full then do these upgrade routines, great time saver and more human-like
-				If $g_iFreeBuilderCount > 0 Then ; if 2 builder available and storages 70% full then do upgrades
-					If _ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
-						Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
-						For $Index In $aRndFuncList
-							If Not $g_bRunState Then Return
-							_RunFunction($Index)
-							If _Sleep(100) Then Return
-							If $g_bRestart Then Return
-							If Not $g_bRunState Then Return
-						Next
-					EndIf
-				EndIf
+				;If $g_iFreeBuilderCount > 0 Then ; if 2 builder available and storages 70% full then do upgrades
+					;If _ColorCheck(_GetPixelColor(709, 29, True), Hex(0xF4DD72, 6), 1) Or _ColorCheck(_GetPixelColor(702, 83, True), Hex(0xC027C0, 6), 1) Then
+				Local $aRndFuncList = ['UpgradeBuilding', 'UpgradeWall']
+				For $Index In $aRndFuncList
+					If Not $g_bRunState Then Return
+					_RunFunction($Index)
+					If _Sleep(100) Then Return
+					ClickAway()
+					If $g_bRestart Then Return
+					If Not $g_bRunState Then Return
+				Next
+					;EndIf
+				;EndIf
 			EndIf
 
-		Case "QKR1" ; QuickRoutine before 2nd attack
+		Case "QKR1" ; QuickRoutine before 2nd attack 
 			Local $aRndFuncList = ['Collect', 'FstReq', 'ReplayShare', 'CheckLeague', 'CollectAchievements', 'CollectCCGold']
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
 				If _Sleep(500) Then Return
+				ClickAway()
 				If $g_bRestart Then Return
 				If Not $g_bRunState Then Return
 			Next
@@ -1607,18 +1661,19 @@ Func CommonRoutine($RoutineType = Default)
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
-				If _Sleep(50) Then Return
+				If _Sleep(100) Then Return
+				ClickAway()
 				If $g_bRestart Then Return
 				If Not $g_bRunState Then Return
 			Next
 
 		Case "SA3" ; switch
-			;Local $aRndFuncList = ['CollectFreeMagicItems', 'DonateCC,Train', 'BuilderBase', 'CollectCCGold', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeWall', 'UpgradeLow']
-			Local $aRndFuncList = ['Laboratory', 'BuilderBase', 'CollectCCGold', 'CollectFreeMagicItems', 'AutoUpgradeCC']
+			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeWall'] ;, 'UpgradeLow']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
-				If _Sleep(50) Then Return
+				If _Sleep(100) Then Return
+				ClickAway()
 				If $g_bRestart Then Return
                 If Not $g_bRunState Then Return
 			Next

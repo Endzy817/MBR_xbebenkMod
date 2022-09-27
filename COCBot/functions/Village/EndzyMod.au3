@@ -106,7 +106,10 @@ EndFunc ;==>TestAttack
 
 #Region - For MainLoop - Endzy
 Func EU0() ; Early Upgrades
-	RequestCC() ; only type CC text req here
+	RequestCC() ; only type CC text req here]
+	ClickAway()
+	_SLeep(500)
+	ClickAway()
 	If $g_bChkOnlyAttack Then
 		SetLog("On EarlyUpgChk, OnlyAttack enabled, skipping some routines", $COLOR_INFO)
 	Else
