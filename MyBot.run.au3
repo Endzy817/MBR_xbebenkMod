@@ -1404,57 +1404,10 @@ Func FirstCheckRoutine()
 	If Not $g_bRunState Then Return
 	checkMainScreen(True, $g_bStayOnBuilderBase, "FirstCheckRoutine")
 
-	If $g_bChkCGBBAttackOnly Then
-		SetLog("Enabled Do Only BB Challenges", $COLOR_INFO)
-		For $count = 1 to 11
-			If Not $g_bRunState Then Return
-			If $count > 10 Then
-				SetLog("Something maybe wrong, exiting to MainLoop!", $COLOR_INFO)
-				ExitLoop
-			EndIf
-
-			If _ClanGames(False, $g_bChkForceBBAttackOnClanGames) Then
-				SetLog("[" & $count & "] Trying to complete BB Challenges", $COLOR_INFO)
-				If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-					SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-					GotoBBTodoCG()
-				Else
-					ExitLoop ;should be will never get here, but
-				EndIf
-			Else
-				If $g_bIsCGPointMaxed Then ExitLoop ; If point is max then continue to main loop
-				If Not $g_bIsCGEventRunning Then ExitLoop ; No Running Event after calling ClanGames
-				If $g_bChkClanGamesStopBeforeReachAndPurge and $g_bIsCGPointAlmostMax Then ExitLoop ; Exit loop if want to purge near max point
-			EndIf
-			If isOnMainVillage() Then ZoomOut()	; Verify is on main village and zoom out
-		Next
-	Else
-		If $g_bCheckCGEarly And $g_bChkClanGamesEnabled Then
-			SetLog("Check ClanGames Early", $COLOR_INFO)
-			_ClanGames(False, $g_bChkForceBBAttackOnClanGames)
-			If Not $g_bRunState Then Return
-			If $g_bChkForceBBAttackOnClanGames And $g_bIsBBevent Then
-				SetLog("Forced BB Attack On ClanGames", $COLOR_INFO)
-				GotoBBTodoCG()
-			EndIf
-		EndIf
-	EndIf
-
 	;Skip switch if Free Builder > 0 Or Storage Fill is Low, when clangames
 	Local $bSwitch = True
 	;If $g_iFreeBuilderCount - ($g_bUpgradeWallSaveBuilder ? 1 : 0) > 0 Then $bSwitch = False
 	;If $g_abLowStorage[$eLootElixir] Or $g_abLowStorage[$eLootGold] Then $bSwitch = False
-
-	If Not $g_bRunState Then Return
-	If ProfileSwitchAccountEnabled() And $g_bForceSwitchifNoCGEvent And Number($g_aiCurrentLoot[$eLootTrophy]) < 4900 And $bSwitch Then
-		SetLog("No Event on ClanGames, Forced switch account!", $COLOR_SUCCESS)
-		PrepareDonateCC()
-		DonateCC()
-		TrainSystem()
-		CommonRoutine("NoClanGamesEvent")
-		$g_bForceSwitchifNoCGEvent = True
-		checkSwitchAcc() ;switch to next account
-	EndIf
 
 	Local $aRndFuncList = ['BoostBarracks', 'BoostSpellFactory', 'BoostWorkshop', 'BoostKing', 'BoostQueen', 'BoostWarden', 'BoostChampion']
 	_ArrayShuffle($aRndFuncList)
@@ -1584,11 +1537,12 @@ Func FirstCheckRoutine()
 	CommonRoutine("FCR0") ; FirstCheckRoutine
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
 		CommonRoutine("SA3") ;routines before switch account
-		_ClanGames(False, False, True) ; Do Only Purge
+		;_ClanGames(False, False, True) ; Do Only Purge
 		ClickAway()
 		If _Sleep(500) Then Return
 		_RunFunction("XtrAtk")
 		If _Sleep(500) Then Return
+		ClickAway()
 		checkSwitchAcc() ;switch to next account
 	EndIf
 
@@ -1653,6 +1607,17 @@ Func CommonRoutine($RoutineType = Default)
 				If Not $g_bRunState Then Return
 			Next
 
+		Case "SA3" ; switch
+			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeWall'] ;, 'UpgradeLow']
+			For $Index In $aRndFuncList
+				If Not $g_bRunState Then Return
+				_RunFunction($Index)
+				If _Sleep(100) Then Return
+				ClickAway()
+				If $g_bRestart Then Return
+                If Not $g_bRunState Then Return
+			Next
+
 		Case "NCGE2" ; NoClanGamesEvent
 			Local $aRndFuncList = ['Collect', 'PetHouse', 'CollectCCGold', 'Laboratory', 'DonateCC,Train', _
 			'CollectCCGold', 'AutoUpgradeCC', 'BBRTN0']
@@ -1664,17 +1629,6 @@ Func CommonRoutine($RoutineType = Default)
 				ClickAway()
 				If $g_bRestart Then Return
 				If Not $g_bRunState Then Return
-			Next
-
-		Case "SA3" ; switch
-			Local $aRndFuncList = ['BuilderBase', 'CollectCCGold', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeWall'] ;, 'UpgradeLow']
-			For $Index In $aRndFuncList
-				If Not $g_bRunState Then Return
-				_RunFunction($Index)
-				If _Sleep(100) Then Return
-				ClickAway()
-				If $g_bRestart Then Return
-                If Not $g_bRunState Then Return
 			Next
 	EndSwitch
 EndFunc
