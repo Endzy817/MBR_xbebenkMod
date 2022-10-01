@@ -1006,7 +1006,7 @@ Global $g_aiLastGoodWallPos[2] = [0, 0] ;0 = x, 1 = y, 2 = wall level
 Global $g_aUpgradeWall[3] = [0, 0, 0] ;wall level
 ; Upgrading - Wall
 ;First cost is for walls level 5.  MBR doesn't support walls until level 4.
-Global Const $g_aiWallCost[11] = [20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 3000000, 5000000, 7000000]
+Global Const $g_aiWallCost[11] = [10000, 15000, 25000, 37500, 50000, 100000, 250000, 500000, 1500000, 2500000, 3500000]
 Global $g_iWallCost = 0
 ; xbebenkmod - Wall Upgrade
 Global $g_WallGEFull = -1 ;-1 = unset, 0 = elixir, 1 = gold, 2 = both
