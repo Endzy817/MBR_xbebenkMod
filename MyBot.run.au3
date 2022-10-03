@@ -1424,13 +1424,13 @@ Func FirstCheckRoutine()
 		; VERIFY THE TROOPS AND ATTACK IF IS FULL
 		SetLog("-- FirstCheck on Train --", $COLOR_DEBUG)
 		If Not $g_bRunState Then Return
-		If $g_bDonateEarly Then
-			SetLog("Donate Early Enabled", $COLOR_INFO)
-			checkArmyCamp(True, True)
-			_Sleep(1000)
-			PrepareDonateCC()
-			DonateCC()
-		EndIf
+		;If $g_bDonateEarly Then
+		;	SetLog("Donate Early Enabled", $COLOR_INFO)
+		;	checkArmyCamp(True, True)
+		;	_Sleep(1000)
+		;	PrepareDonateCC()
+		;	DonateCC()
+		;EndIf
 		TrainSystem()
 		SetLog("Are you ready? " & String($g_bIsFullArmywithHeroesAndSpells), $COLOR_INFO)
         If Not $g_bIsFullArmywithHeroesAndSpells Then
@@ -1475,7 +1475,7 @@ Func FirstCheckRoutine()
 
 	If Not $g_bRunState Then Return
     CommonRoutine("QKR1")
-	
+
     ; ------------------ S E C O N D  A T T A C K ------------------
 	If Not $g_bRunState Then Return
 	If ProfileSwitchAccountEnabled() And $g_bChkFastSwitchAcc Then ;Allow immediate Second Attack on FastSwitchAcc enabled
@@ -1531,8 +1531,6 @@ Func FirstCheckRoutine()
 	TrainSystem()
 	_RunFunction('DonateCC,Train') ; 1st donateCC
 
-	_RunFunction('UpgradeWall')
-
 	If Not $g_bRunState Then Return
 	CommonRoutine("FCR0") ; FirstCheckRoutine
 	If ProfileSwitchAccountEnabled() And ($g_bForceSwitch Or $g_bChkFastSwitchAcc) Then
@@ -1540,9 +1538,9 @@ Func FirstCheckRoutine()
 		;_ClanGames(False, False, True) ; Do Only Purge
 		ClickAway()
 		If _Sleep(500) Then Return
-		_RunFunction("XtrAtk")
-		If _Sleep(500) Then Return
-		ClickAway()
+		;_RunFunction("XtrAtk")
+		;If _Sleep(500) Then Return
+		;ClickAway()
 		checkSwitchAcc() ;switch to next account
 	EndIf
 
@@ -1595,7 +1593,7 @@ Func CommonRoutine($RoutineType = Default)
 				;EndIf
 			EndIf
 
-		Case "QKR1" ; QuickRoutine before 2nd attack 
+		Case "QKR1" ; QuickRoutine before 2nd attack
 			Local $aRndFuncList = ['Collect', 'FstReq', 'ReplayShare', 'CheckLeague', 'CollectAchievements', 'CollectCCGold']
 			_ArrayShuffle($aRndFuncList)
 			For $Index In $aRndFuncList
