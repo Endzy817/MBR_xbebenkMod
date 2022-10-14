@@ -1007,7 +1007,7 @@ Global $g_aiLastGoodWallPos[2] = [0, 0] ;0 = x, 1 = y, 2 = wall level
 Global $g_aUpgradeWall[3] = [0, 0, 0] ;wall level
 ; Upgrading - Wall
 ;First cost is for walls level 5.  MBR doesn't support walls until level 4.
-Global Const $g_aiWallCost[11] = [10000, 15000, 25000, 37500, 50000, 100000, 250000, 500000, 1500000, 2500000, 3500000]
+Global Const $g_aiWallCost[11] = [20000, 30000, 50000, 75000, 100000, 200000, 500000, 1000000, 3000000, 5000000, 7000000]
 Global $g_iWallCost = 0
 ; xbebenkmod - Wall Upgrade
 Global $g_WallGEFull = -1 ;-1 = unset, 0 = elixir, 1 = gold, 2 = both
@@ -2005,10 +2005,3 @@ Global $g_aVillageRefSize[22][7] = [["DS", "Default", 612.8, 45, 815, 60, 636], 
 									["W1", "Scenery1", 553.3, 61, 813, 55, 619], _ ;ok
 									["W2", "Scenery2", 619.29, 61, 796, 64, 607]] ;ok
 Global $g_sCurrentScenery = "", $g_sSceneryCode = "DS"
-
-; Check No League for Dead Base - Endzy
-Global $g_bChkNoLeague[$g_iModeCount] = [False, False, False]
-Global $g_iInpSmartZapTimes = 1 ;EndzyMod - SmartZap
-Global $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSetY = 0 ; Endzy
-Global $g_hChkSmartFarmAndRandomQuant = True ; Endzy
-Global $g_bUseSmartFarmAndRandomQuant = True ; Endzy
