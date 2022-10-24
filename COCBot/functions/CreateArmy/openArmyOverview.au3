@@ -16,7 +16,6 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 
 	If $bCheckMain Then
 		If Not IsMainPage() Then ; check for main page, avoid random troop drop
-			If Not $g_bRunState Then Return
 			SetLog("Cannot open Army Overview window", $COLOR_ERROR)
 			Return False
 		EndIf
