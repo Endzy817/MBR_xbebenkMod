@@ -59,7 +59,7 @@ EndIf
 ; MBR References.au3 must be last include
 #include "COCBot\MBR References.au3"
 
-;#include "COCBot\Test420\Test420.au3"
+;#include "C:\Test420\Test420\Test420.au3"
 
 ; Autoit Options
 Opt("GUIResizeMode", $GUI_DOCKALL) ; Default resize mode for dock android support
@@ -671,7 +671,7 @@ Func MainLoop($bCheckPrerequisitesOK = True)
 
 	; Check the Supported Emulator versions
 	CheckEmuNewVersions()
-	
+
 	;Reset Telegram message
 	NotifyGetLastMessageFromTelegram()
 	$g_iTGLastRemote = $g_sTGLast_UID
@@ -1099,11 +1099,6 @@ EndFunc   ;==>_RunFunction
 
 Func __RunFunction($action)
 	SetDebugLog("_RunFunction: " & $action & " BEGIN", $COLOR_DEBUG2)
-	If $g_bChkOnlyAttack And Not $action = 'BuilderBase' Then
-		SetLog($Action & " - Only attack enabled, Skip", $COLOR_ACTION)
-		Return
-	EndIf
-
 	Switch $action
 		Case "Collect"
 			Collect()
@@ -1594,7 +1589,7 @@ Func CommonRoutine($RoutineType = Default)
 			Next
 
 		Case "Switch"
-			Local $aRndFuncList = ['Laboratory', 'CollectCCGold', 'CollectFreeMagicItems', 'AutoUpgradeCC', 'DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase']
+			Local $aRndFuncList = ['DonateCC,Train', 'UpgradeHeroes', 'UpgradeBuilding', 'UpgradeWall', 'UpgradeLow', 'BuilderBase']
 			For $Index In $aRndFuncList
 				If Not $g_bRunState Then Return
 				_RunFunction($Index)
@@ -1691,16 +1686,6 @@ Func TestBuilderBase()
 	$g_bChkCleanBBYard = $bChkCleanBBYard
 	$g_bChkEnableBBAttack = $bChkEnableBBAttack
  EndFunc
-
- Func SetSAtk($attack = False)
-
-	If $attack = True Then
-		$g_bTestSceneryAttack = True
-	Else
-		$g_bTestSceneryAttack = False
-	EndIf
-
-EndFunc
 
 Func GotoBBTodoCG()
 	If SwitchBetweenBases("BB") And isOnBuilderBase() Then
