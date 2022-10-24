@@ -73,6 +73,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					Local $aCords = decodeSingleCoord($Result)
 					$g_iQuickMISX = $aCords[0] + $Left
 					$g_iQuickMISY = $aCords[1] + $Top
+
 					$Name = RetrieveImglocProperty($KeyValue[0], "objectname")
 					$g_iQuickMISName = $Name
 
@@ -95,8 +96,8 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 					If $g_bDebugSetlog Then SetDebugLog($ValueReturned & " Found: " & $Result, $COLOR_PURPLE)
 					Local $CoordsInArray = StringSplit($Result, "|", $STR_NOCOUNT)
 					Return $CoordsInArray
-
-				Case "CNX"
+					
+				Case "CNX" 
 					Local $Result[0][4]
 					Local $KeyValue = StringSplit($Res[0], "|", $STR_NOCOUNT)
 					Local $sResult = ""
@@ -106,7 +107,7 @@ Func QuickMIS($ValueReturned, $directory, $Left = 0, $Top = 0, $Right = $g_iGAME
 						Local $xy = StringSplit($DLLRes[0], "|", $STR_NOCOUNT)
 						;SetDebugLog(_ArrayToString($xy))
 						For $j = 0 To Ubound($xy) - 1
-							If UBound(decodeSingleCoord($xy[$j])) > 1 Then
+							If UBound(decodeSingleCoord($xy[$j])) > 1 Then 
 								Local $Tmpxy = StringSplit($xy[$j], ",", $STR_NOCOUNT)
 								_ArrayAdd($Result, $objName[0] & "|" & $Tmpxy[0] + $Left & "|" & $Tmpxy[1] + $Top & "|" & $objName[1])
 								$sResult &= "|" & $objName[0] & "," & $Tmpxy[0] + $Left & "," & $Tmpxy[1] + $Top & "," & $objName[1]

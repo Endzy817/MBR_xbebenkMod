@@ -243,23 +243,3 @@ Global Const $g_sImgRewardTile  = @ScriptDir & "\imgxml\Resources\ClanGamesImage
 Global Const $g_sImgRewardTileSelected  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\TileSelected"
 Global Const $g_sImgRewardItems  = @ScriptDir & "\imgxml\Resources\ClanGamesImages\MainLoop\Reward\Items"
 #EndRegion
-
-#Region - Endzy MOD
-; <><><><><> Check No League - For search dead bases <><><><><>
-Global Const $g_sImgNoLeague = @ScriptDir & "\imgxml\Resources\EndzyXml\NoLeague"
-; <><><><><> Friendly Challenge - Surrender button <><><><><>
-Global Const $g_sImgFCsurr = @ScriptDir & "\imgxml\Resources\EndzyXml\TestAttack"
-; <><><><><> Check League <><><><><>
-Global Const $g_sImgChkLeague = @ScriptDir & "\imgxml\Resources\EndzyXml\ChkLeague"
-Global Const $g_sImgChkLeagueOkBtn = @ScriptDir & "\imgxml\Resources\EndzyXml\ChkLeagueOkBtn"
-;  <><><><><> Daily Challenge - Skip sell <><><><><>
-Global Const $g_sImgHeroBook = @ScriptDir & "\imgxml\Resources\EndzyXml\DCHeroBook"
-Global Const $g_sImgHeroPot = @ScriptDir & "\imgxml\Resources\EndzyXml\DCHeroPot"
-; <><><><><> Auto Locate <><><><><>
-Global Const $g_sImgLocationKing =	@ScriptDir & "\imgxml\Resources\EndzyXml\AutoLocate\King"
-Global Const $g_sImgLocationQueen =	@ScriptDir & "\imgxml\Resources\EndzyXml\AutoLocate\Queen"
-Global Const $g_sImgLocationChamp =	@ScriptDir & "\imgxml\Resources\EndzyXml\AutoLocate\Champion"
-Global Const $g_sImgLocationWarden = @ScriptDir & "\imgxml\Resources\EndzyXml\AutoLocate\Warden"
-;Global Const $g_sImgLocationLabs = @ScriptDir & "\imgxml\Resources\EndzyXml\AutoLocate\Lab"
-;Global Const $g_sImgLocationCastle = @ScriptDir & "\imgxml\Resources\EndzyXml\AutoLocate\Castle"
-#EndRegion - Endzy MOD

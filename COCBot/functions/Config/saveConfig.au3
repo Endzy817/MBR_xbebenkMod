@@ -381,7 +381,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "minTreasurygold", $g_iTxtTreasuryGold)
 	_Ini_Add("other", "minTreasuryelixir", $g_iTxtTreasuryElixir)
 	_Ini_Add("other", "minTreasurydark", $g_iTxtTreasuryDark)
-	_Ini_Add("search", "DBNoLeague", $g_bChkNoLeague[$DB] ? 1 : 0) ; Check No League for Dead Base
+
 	_Ini_Add("MagicItems", "ChkSaleMagicItems", $g_bChkEnableSaleMagicItem ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkSaleBOF", $g_bChkSaleBOF ? 1 : 0)
 	_Ini_Add("MagicItems", "ChkSaleBOB", $g_bChkSaleBOB ? 1 : 0)
@@ -551,8 +551,7 @@ Func SaveConfig_600_6()
 	_Ini_Add("other", "ForceSwitchifNoCGEvent", $g_bChkForceSwitchifNoCGEvent)
 	_Ini_Add("other", "EnableCCSleep", $g_bEnableCCSleep)
 	_Ini_Add("other", "SkipDT", $g_bSkipDT)
-	_Ini_Add("other", "ChkRequestTroopsEnable", $g_bRequestTroopsEnable) ;Make config name for request cc troops
-	_Ini_Add("other", "ChkDonateTroops", $g_bChkDonate) ;Make config name for request cc troops
+
 	SaveBuilderBaseMod()
 EndFunc   ;==>SaveConfig_600_6
 
