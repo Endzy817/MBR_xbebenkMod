@@ -379,4 +379,54 @@ Func OpenArmyOverview($bCheckMain = True, $sWhereFrom = "Undefined")
 	;Next
 	Return True
 EndFunc   ;==>OpenArmyOverview
+
+; #FUNCTION# ====================================================================================================================
+; Name ..........: RandomArmyComp
+; Description ...: New and complete RandomArmyComp using quick train. Will ONLY work if Quick Train is ENABLED.
+; Syntax ........:
+; Parameters ....: None
+; Return values .: None
+; Author ........: Lilmeeee (09-2021), xbebenk (09-2021)
+; Modified ......:
+; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2019
+;                  MyBot is distributed under the terms of the GNU GPL
+; Related .......:
+; Link ..........: https://github.com/MyBotRun/MyBot/wiki
+; Example .......: No
+; ===============================================================================================================================
+
+Func RandomArmyComp()
+	If Not $g_bRandomArmyComp Then Return False
+    If Not OpenQuickTrainTab(False, "RandomArmyComp()") Then Return
+    If _Sleep(750) Then Return
+
+	Local $Available_Comps[0] = [], $Result = 0
+	Local $Army_Coords[4] = ["783,324", "798,434", "801,540", "777,177"]
+
+	If _ColorCheck(_GetPixelColor(752, 309, True), Hex(0xBDE98D, 6), 1) Then
+        _ArrayAdd($Available_Comps, 1)
+	EndIf
+	If _ColorCheck(_GetPixelColor(752, 456, True), Hex(0xE8E8E0, 6), 1) Then
+        _ArrayAdd($Available_Comps, 2)
+	EndIf
+	If _ColorCheck(_GetPixelColor(751, 567, True), Hex(0xE8E8E0, 6), 1) Then
+        _ArrayAdd($Available_Comps, 3)
+	EndIf
+	If _ColorCheck(_GetPixelColor(777, 177, True), Hex(0xBDE98D, 6), 1) Then
+		_ArrayAdd($Available_Comps, 4)
+	EndIf
+
+	If UBound($Available_Comps) = 0 Then
+		SetLog("There is no available QuickTrain Army! Skipped!", $COLOR_WARNING)
+		Return False
+	Else
+		_ArrayShuffle($Available_Comps)
+	EndIf
+
+	SetLog("Training QuickTrain Army " & $Available_Comps[0], $COLOR_INFO)
+	Execute("PureClick(" & $Army_Coords[$Available_Comps[0]-1] & ")")
+
+	Return True
+EndFunc ;==>RandomArmyComp
+
 #ce
