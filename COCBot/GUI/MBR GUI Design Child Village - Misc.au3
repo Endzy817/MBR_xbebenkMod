@@ -549,14 +549,15 @@ Global $g_hCmbFillIncorrectTroopCombo = 0, $g_hChkMMIgnoreIncorrectSpellCombo = 
 Global $g_hChkMMTrainPreviousArmy = 0, $g_hChkMMSkipWallPlacingOnBB = 0, $g_hChkMMCheckCGEarly = 0, $g_hUpgradeWallEarly = 0
 Global $g_hAutoUpgradeEarly = 0, $g_hChkForceSwitchifNoCGEvent = 0, $g_hDonateEarly = 0, $g_hChkSkipSnowDetection = 0, $g_hChkEnableCCSleep = 0, $g_hChkSkipDT = 0
 
-Global $g_sCmbFICTroops[7][3] = [ _
+Global $g_sCmbFICTroops[8][3] = [ _
 								["Barb",	"Barbarians",		1], _
 								["Arch",	"Archers",			1], _
 								["Gobl",	"Goblins",			1], _
 								["Ball",	"Balloons",			5], _
 								["SGobl",	"Super Goblins",	3], _
 								["SBarb",	"Super Barbarians",	5], _
-								["SMini",	"Super Minions",	12]]
+								["SMini",	"Super Minions",	12], _
+								["SWall",	"Super WallBreakers", 8]]
 Global $g_sCmbFICSpells[6][3] = [ _
 								["LSpell",	"Lightning Spell",	1], _
 								["BtSpell",	"Bat Spell",		1], _

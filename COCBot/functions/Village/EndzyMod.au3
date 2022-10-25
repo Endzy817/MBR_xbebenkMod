@@ -334,6 +334,50 @@ Func _GUICtrlCreateInput($sText, $iLeft, $iTop, $iWidth, $iHeight, $vStyle = -1,
 	Return $hReturn
 EndFunc   ;==>_GUICtrlCreateInput
 
+Func BBRTN0() ; BB routine for cg - do upgrades - lab - ClockTower boost etc. before switch acc
+
+	SetLog("Do BB routine before account switch...", $COLOR_INFO)
+	If SwitchBetweenBases("BB") Then
+		$g_bStayOnBuilderBase = True
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		ZoomOut()
+		BuilderBaseReport()
+		CollectBuilderBase()
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+
+		If $g_bElixirStorageFullBB Then StartClockTowerBoost()
+
+		CleanBBYard()
+		If _Sleep($DELAYRUNBOT1) Then Return
+		checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+
+		If isGoldFullBB() Or isElixirFullBB() Then
+			AutoUpgradeBB()
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
+
+		If isElixirFullBB() Then
+			StarLaboratory()
+			If _Sleep($DELAYRUNBOT1) Then Return
+			checkMainScreen(True, $g_bStayOnBuilderBase, "BuilderBase")
+		EndIf
+
+		ZoomOut(True) ;directly zoom
+		StartClockTowerBoost()
+		If _Sleep($DELAYRUNBOT3) Then Return
+		BuilderBaseReport(False, True, False)
+		If _Sleep($DELAYRUNBOT3) Then Return
+		; switch back to normal village
+		ZoomOut(True) ;directly zoom
+		$g_bStayOnBuilderBase = False
+		SwitchBetweenBases("Main")
+		$g_bStayOnBuilderBase = False
+	EndIf
+
+	If Not $g_bStayOnBuilderBase And IsOnBuilderBase() Then SwitchBetweenBases("Main")
+EndFunc ;===> BBRTN0()
+
 #Region - GUI Control
 #cs
 Func chkUseSmartFarmAndRandomQuant()
