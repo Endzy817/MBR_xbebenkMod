@@ -315,6 +315,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			GUICtrlSetData($g_hTxtTreasuryDark, $g_iTxtTreasuryDark)
 			GUICtrlSetState($g_hChkCollectRewards, $g_bChkCollectRewards ? $GUI_CHECKED : $GUI_UNCHECKED)
 			GUICtrlSetState($g_hChkSellRewards, $g_bChkSellRewards ? $GUI_CHECKED : $GUI_UNCHECKED)
+			$g_bChkNoLeague[$DB] = (GUICtrlRead($g_hChkDBNoLeague) = $GUI_CHECKED) ; Check No League for Dead Base
 
 			;Sale Magic Items
 			GUICtrlSetState($g_hChkEnableSaleMagicItem, $g_bChkEnableSaleMagicItem ? $GUI_CHECKED : $GUI_UNCHECKED)
@@ -530,6 +531,7 @@ Func ApplyConfig_600_6($TypeReadSave)
 			$g_bChkSaleROBG = (GUICtrlRead($g_hChkSaleROBG) = $GUI_CHECKED)
 			$g_bChkSaleROBE = (GUICtrlRead($g_hChkSaleROBE) = $GUI_CHECKED)
 			chkEnableSaleMagicItem()
+			GUICtrlSetState($g_hChkDBNoLeague, $g_bChkNoLeague[$DB] = True ? $GUI_CHECKED : $GUI_UNCHECKED)	; Check No League for Dead Base
 
 			$g_bChkCollectBuilderBase = (GUICtrlRead($g_hChkCollectBuilderBase) = $GUI_CHECKED)
 			$g_bChkCleanBBYard = (GUICtrlRead($g_hChkCleanBBYard) = $GUI_CHECKED)
