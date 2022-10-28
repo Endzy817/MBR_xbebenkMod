@@ -1944,4 +1944,4 @@ Global $g_iInpSmartZapTimes = 1 ;EndzyMod - SmartZap
 Global $g_iQuickMISWOffSetX = 0, $g_iQuickMISWOffSetY = 0 ; Endzy
 Global $g_hChkSmartFarmAndRandomQuant = True ; Endzy
 Global $g_bUseSmartFarmAndRandomQuant = True ; Endzy
-Global $g_bChkOnlyAttack = 0 ; Endzy
+Global $g_bOnlyAttack = 0 ; Endzy
